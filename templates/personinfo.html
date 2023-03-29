@@ -1,0 +1,250 @@
+{% extends 'masterweb.html' %}
+{% block show %}
+ <div id="page-loader" class="fade show">
+    <span class="spinner"></span>
+</div>
+<!-- end #page-loader -->
+
+<!-- begin #page-container -->
+<div id="page-container" class="fade page-sidebar-fixed page-header-fixed">
+    <!-- begin #header -->
+    <div id="header" class="header navbar-default">
+        <!-- begin navbar-header -->
+        <div class="navbar-header">
+            {% if request.session.permission == 1 %}
+                <a href="{% url 'dashboard' %}" class="navbar-brand">
+                <span class="navbar-logo"></span>
+                Doo-Q
+                เจ้าหน้าที่ {{ request.session.name }}
+            {% else %}
+                <a href="{% url 'calendar' %}" class="navbar-brand">
+                <span class="navbar-logo"></span>
+                Doo-Q
+                ผู้ป่วย : {{ request.session.name }}
+            {% endif %}</a>
+            <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+            <span style="width: 100%;  position: relative;font-size: 18px;left: 35%;padding-top: 0.5%;">หน้าข้อมูลส่วนตัว</span>
+        <!-- end navbar-header --><!-- begin header-nav -->
+        <ul class="navbar-nav navbar-right">
+            <li class="dropdown navbar-user">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    {% if request.session.permission == 1 %}
+                        {% for datahospitals in datahospital %}
+                            {% if dataST.Hid == datahospitals.Hid %}
+                                <span class="d-none d-md-inline" style="font-size: 18px">{{ datahospitals.Hname }} -
+                                    {% for dataDPMs in dataDPM %}
+                                        {% if  dataDPMs.Did == Dids %}
+                                            {{ dataDPMs.Dname }}
+                                        {% endif %}
+                                    {% endfor %}</span>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {% if hospitalname %}
+                            <span class="d-none d-md-inline"
+                                  style="font-size: 18px">{{ hospitalname }} - {{ DPM }} </span>
+                        {% endif %}
+                    {% endif %}
+                    {% if request.session.hn %}
+                        <span class="d-none d-md-inline"
+                              style="font-size: 18px">กำลังใช้บริการ - {{ request.session.hospital }} </span>
+                    {% endif %}
+                </a>
+            </li>
+        </ul>
+        <!-- end header navigation right -->
+    </div>
+    <!-- end #header -->
+
+    <!-- begin #sidebar -->
+    <div id="sidebar" class="sidebar">
+        <!-- begin sidebar scrollbar -->
+        <div data-scrollbar="true" data-height="100%">
+            <!-- begin sidebar user -->
+            <ul class="nav">
+                {% if request.session.permission == 1 %}
+                    <li>
+                        <a href="{% url 'dashboard' %}">
+                            <i class="material-icons">dashboard</i>
+                            <span>dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'callqueue2' %}">
+                            <i class="material-icons">calendar_today</i>
+                            <span>เรียกคิว</span>
+                        </a>
+                    </li>
+                    <li >
+                        <a href="{% url 'vtfbooking' %}">
+                            <i class="material-icons">calendar_today</i>
+                            <span>รับคิว</span>
+                        </a>
+                    </li>
+                    <li class="has-sub active">
+                        <a href="{% url 'staff' %}">
+                            <i class="material-icons">local_hospital</i>
+                            <span style="text-align: left">แผนก/กลุ่มงาน</span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li class="has-sub">
+                                <a href="{% url 'sthos' %}">
+                                    <b class="caret"></b>
+                                    <span style="text-align: left">หมอ/เจ้าหน้าที่(ตามสังกัด)</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="sub-menu">
+                            <li class="has-sub">
+                                <a href="{% url 'doctor' %}">
+                                    <b class="caret"></b>
+                                    <span>แผนรับคนไข้</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="{% url 'mnbook' %}">
+                            <i class="material-icons">date_range</i>
+                            <span>กำหนดช่วงเวลา</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'staffinfo' %}">
+                            <i class="material-icons">supervised_user_circle</i>
+                            <span>ข้อมูลส่วนตัว</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{% url 'calendar' %}">
+                            <i class="material-icons">calendar_today</i>
+                            <span>จองคิว</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'person' %}">
+                            <i class="material-icons">calendar_today</i>
+                            <span>HN</span>
+                        </a>
+                    </li>
+                    <li class="active" style="background-color: mediumseagreen">
+                        <a href="{% url 'personinfo' %}">
+                            <i class="material-icons">supervised_user_circle</i>
+                            <span>ข้อมูลส่วนตัว</span>
+                        </a>
+                    </li>
+                {% endif %}
+                <li>
+                    <a href="{% url 'dessession' %}" class="btn btn-default">
+                        <i class="material-icons">logout</i>
+                        <span style="color: black;">ออกจากระบบ</span>
+                    </a>
+                </li>
+            </ul>
+            <!-- end sidebar nav -->
+        </div>
+        <!-- end sidebar scrollbar -->
+    </div>
+    <div class="sidebar-bg"></div>
+    <div class="content" id="content" style="font-size: 18px;">
+        <div class="panel panel-inverse" data-sortable-id="form-plugins-12">
+            <!-- begin panel-heading -->
+            <div class="panel-heading">
+                <h4 class="panel-title">ข้อมูลส่วนตัวผู้ป่วย</h4>
+                <div class="panel-heading-btn">
+                </div>
+            </div>
+            <!-- end panel-heading -->
+            <!-- begin panel-body -->
+            <div class="panel-body panel-form">
+                <form class="form-horizontal form-bordered"
+                      action="{% url 'editperson' %}"
+                      method="post">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <label class="col-lg-4 col-form-label">รหัสผู้ใช้</label>
+                        <div class="col-lg-8">
+                            <input class="form-control inputDatabaseName" value="{{ dataPerson.Pid }}" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-4 col-form-label">ชื่อผู้ใช้</label>
+                        <div class="col-lg-8">
+                            <input class="form-control testsss" id="name{{ dataPerson.Pid }}" type="text"
+                                   name="usename"
+                                   value="{{ dataPerson.Pname }}">
+                            <input type="hidden" name="userid" value="{{ dataPerson.Pid }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-4 col-form-label">อีเมล</label>
+                        <div class="col-lg-8">
+                            <div class="input-group bootstrap-timepicker">
+                                <input class="form-control testsss" id="mail{{ dataPerson.Pid }}" type="text"
+                                       name="mail" value="{{ dataPerson.Pemail }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-4 col-form-label">รหัสผ่าน</label>
+                        <div class="col-lg-8">
+                            <input class="form-control testsss" id="password{{ dataPerson.Pid }}" type="password"
+                                   name="password"
+                                   value="{{ dataPerson.Ppassword }}">
+                        </div>
+                    </div>
+
+            </div>
+
+            <!-- end panel-body -->
+        </div>
+        <div class="col-xl-12 fixed-bottom" id="showbtns" style="background-color: black;height: 75px;">
+            <div class="float-left" style="color: white;margin-top: 1%">
+                <p>คุณต้องการบันทึกหรือไม่</p>
+            </div>
+            <div class="float-right" style="color: white;margin-top: 1%">
+                <a href="{% url 'personinfo' %}" class="btn btn-danger">ยกเลิก</a>
+                <button type="submit" class="btn btn-primary">บันทึก</button>
+            </div>
+        </div>
+        </form>
+    </div>
+
+    <script>
+        $('#showbtns').hide();
+        $(document).ready(function () {
+              $('input.testsss').keydown(function (e) {
+                if (e.keyCode == 32) {
+                    return false;
+                }
+            });
+            $('.testsss').keyup(function () {
+                var isvals = document.getElementById("mail{{ dataPerson.Pid }}").value;
+                var isvald = document.getElementById("password{{ dataPerson.Pid }}").value;
+                var isvale = document.getElementById("name{{ dataPerson.Pid }}").value;
+                if (isvald == "{{ dataPerson.Ppassword }}") {
+
+                } else {
+                      $('#showbtns').show();
+                }
+                if (isvals == "{{ dataPerson.Pemail }}") {
+
+                } else {
+                      $('#showbtns').show();
+                }
+                if (isvale == "{{ dataPerson.Pname }}") {
+
+                } else {
+                    $('#showbtns').show();
+                }
+
+            });
+        });
+    </script>
+{% endblock %}

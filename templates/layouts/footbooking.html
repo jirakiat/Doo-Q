@@ -1,0 +1,261 @@
+{% load static %}
+<script src="{% static 'doqs/assets/js/app.min.js' %}"></script>
+<script src="{% static 'doqs/assets/js/theme/apple.min.js' %}"></script>
+<!-- ================== END BASE JS ================== -->
+
+<!-- ================== BEGIN PAGE LEVEL JS ================== -->
+<script src="{% static 'doqs/assets/plugins/d3/d3.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/nvd3/build/nv.d3.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-calendar/js/bootstrap_calendar.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/jquery-migrate/dist/jquery-migrate.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/moment/min/moment.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/ion-rangeslider/js/ion.rangeSlider.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/jquery.maskedinput/src/jquery.maskedinput.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/pwstrength-bootstrap/dist/pwstrength-bootstrap.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/@danielfarrell/bootstrap-combobox/js/bootstrap-combobox.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/tag-it/js/tag-it.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-daterangepicker/daterangepicker.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/select2/dist/js/select2.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'doqs/assets/js/demo/table-manage-responsive.demo.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/d3/d3.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-show-password/dist/bootstrap-show-password.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-colorpalette/js/bootstrap-colorpalette.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/jquery-simplecolorpicker/jquery.simplecolorpicker.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/clipboard/dist/clipboard.min.js' %}"></script>
+<script src="{% static 'doqs/assets/js/demo/form-plugins.demo.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/fullcalendar/dist/fullcalendar.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/fullcalendar/dist/locale/th.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $(".checkperson").click(function () {
+            $("#navshow").removeClass("fade page-sidebar-fixed page-header-fixed page-with-wide-sidebar show has-scroll page-sidebar-minified");
+            $("#navshow").addClass("fade page-sidebar-fixed page-header-fixed page-with-wide-sidebar show");
+        });
+    });
+    $('#data-table-responsive-mytask').DataTable({
+        responsive: true,
+        "dom": '<"top"f>rt<"bottom"lp><"clear">',
+        "order": [[0, "asc"],],
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        "language": {
+            "lengthMenu": "แสดง _MENU_ รายการ",
+            "search": "ค้นหา:",
+            "zeroRecords": "<p style='font-size: 18px;'><i class='fas fa-lg fa-eye-slash'></i>ไม่มีข้อมูล<p>",
+            "info": "Showing page _PAGE_ of _PAGES_",
+            "infoEmpty": "ไม่มีข้อมูล",
+        }
+    });
+    $('#data-table-responsive-timehos').DataTable({
+        responsive: true,
+        "dom": '<"top"f>rt<"bottom"lp><"clear">',
+        "order": [[1, "asc"],],
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        "language": {
+            "lengthMenu": "แสดง _MENU_ รายการ",
+            "search": "ค้นหา:",
+            "zeroRecords": "<p style='font-size: 18px;'><i class='fas fa-lg fa-eye-slash'></i>ไม่มีข้อมูล<p>",
+            "info": "Showing page _PAGE_ of _PAGES_",
+            "infoEmpty": "ไม่มีข้อมูล",
+        }
+    });
+
+    $(document).ready(function () {
+        var calendar = $('#calendar').fullCalendar({
+
+            eventClick: function (info) {
+                alert('Event: ' + info.event.title);
+                alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+                alert('View: ' + info.view.type);
+
+                // change the border color just for fun
+                info.el.style.borderColor = 'red';
+            },
+            eventRender: function (event, element) {
+                if (event.icon == null) {
+                    event.icon = '';
+                }
+                element.find('.fc-title').append(" " + event.icon);
+                element.find('.fc-list-item-title').append(" " + event.icon);
+            },
+            displayEventTime: false,
+            eventLimit: true,
+            draggable: false,
+            defaultView: 'month',
+            locale: 'th',
+            firstDay: 0,
+            header: {
+                left: 'month',
+                center: 'title',
+                right: 'prev,next',
+            },
+            events: [
+                {% for myresults in myresult %}
+                    {
+                        title: "{{ myresults.2 }}",
+                        start: '{{ myresults.0 | date:"Y-m-d" }}',
+                        end: '{{ myresults.1 | date:"Y-m -d"}}',
+                        color: 'green',
+                    },
+                {% endfor %}
+            ]
+        });
+    });
+    $('.closemodal').click(function () {
+        $('.showmodal').removeClass('show');
+    });
+    $('#data-table-responsive-sthospital').DataTable({
+        responsive: true,
+        "dom": '<"top"f>rt<"bottom"lp><"clear">',
+        "order": [[0, "asc"],],
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        "language": {
+            "lengthMenu": "แสดง _MENU_ รายการ",
+            "search": "ค้นหา:",
+            "zeroRecords": "<p style='font-size: 18px;'><i class='fas fa-lg fa-eye-slash'></i>ไม่มีข้อมูล หมอ/เจ้าหน้าที่แผนกนี้ <p>",
+            "info": "Showing page _PAGE_ of _PAGES_",
+            "infoEmpty": "ไม่มีข้อมูล",
+        }
+    });
+    $('#data-table-responsive-doctor').DataTable({
+        responsive: true,
+        "dom": '<"top"f>rt<"bottom"lp><"clear">',
+        "order": [[0, "DESC"],],
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        "language": {
+            "lengthMenu": "แสดง _MENU_ รายการ",
+            "search": "ค้นหา:",
+            "zeroRecords": "<p style='font-size: 18px;'><i class='fas fa-lg fa-eye-slash'></i>ไม่มีข้อมูล <p>",
+            "info": "Showing page _PAGE_ of _PAGES_",
+            "infoEmpty": "ไม่มีข้อมูล",
+        }
+    });
+    function timehosdpm(source) {
+        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i] != source)
+                checkboxes[i].checked = source.checked;
+        }
+    }
+
+
+    function toggle(source) {
+        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i] != source)
+                checkboxes[i].checked = source.checked;
+        }
+    }
+
+    function timehos(src) {
+        $('#div-timehos').show();
+    }
+
+    $('#div-timehos').hide();
+
+    function hidtimehos(src) {
+        $('#div-timehos').hide();
+    }
+
+    $('#showdayss').hide();
+    $(document).ready(function () {
+        $("#myInput2").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable2 tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+    $(document).ready(function () {
+        $("#myInput3").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable3 tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+    document.getElementById('select-alltime').onclick = function () {
+        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        for (var checkbox of checkboxes) {
+            checkbox.checked = this.checked;
+        }
+    }
+        $(document).ready(function () {
+            var calendar = $('#calendardoctor').fullCalendar({
+                eventClick: function (info) {
+                    alert('Event: ' + info.event.title);
+                    alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+                    alert('View: ' + info.view.type);
+
+                    // change the border color just for fun
+                    info.el.style.borderColor = 'red';
+                },
+                dayClick: function (date, jsEvent, view) {
+                    $(this).css('background-color', 'white');
+                    document.getElementById("testday").setAttribute("value", date.format());
+                    let date1 = new Date(date);
+                      $(this).css('background-color', 'red');
+                    setTimeout(function () {
+                        document.getElementById("testsubmit").submit();
+                    }, 300);
+                    document.getElementById("showday").innerHTML = "วันที่ : " + toThaiDateString(date1);
+                    $('#showdayss').show();
+                },
+                eventRender: function (event, element) {
+                    if (event.icon == null) {
+                        event.icon = '';
+                    }
+                    element.find('.fc-title').append(" " + event.icon);
+                    element.find('.fc-list-item-title').append(" " + event.icon);
+                },
+                displayEventTime: false,
+                eventLimit: true,
+                draggable: false,
+                defaultView: 'month',
+                locale: 'th',
+                firstDay: 0,
+                header: {
+                    left: 'month',
+                    center: 'title',
+                    right: 'prev,next',
+                },
+                events: [
+                    {% for myresults in myresult %}
+                        {
+                            title: "{{ myresults.2 }}",
+                            start: '{{ myresults.0 | date:"Y-m-d" }}',
+                            end: '{{ myresults.1 | date:"Y-m -d"}}',
+                            color: 'green',
+                        },
+                    {% endfor %}
+                ]
+            });
+        });
+function toThaiDateString(date) {
+            let monthNames = [
+                "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน",
+                "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม.",
+                "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+            ];
+
+            let year = date.getFullYear() + 543;
+            let month = monthNames[date.getMonth()];
+            let numOfDay = date.getDate();
+
+            let hour = date.getHours().toString().padStart(2, "0");
+            let minutes = date.getMinutes().toString().padStart(2, "0");
+            let second = date.getSeconds().toString().padStart(2, "0");
+
+            return `${numOfDay} ${month} ${year} `;
+        }
+
+</script>

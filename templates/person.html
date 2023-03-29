@@ -1,0 +1,317 @@
+{% extends 'masterweb.html' %}
+{% block show %}
+    {% load static %}
+    <!-- begin content -->
+    <div id="page-loader" class="fade show">
+    <span class="spinner"></span>
+</div>
+<!-- end #page-loader -->
+
+<!-- begin #page-container -->
+<div id="page-container" class="fade page-sidebar-fixed page-header-fixed">
+    <!-- begin #header -->
+    <div id="header" class="header navbar-default">
+        <!-- begin navbar-header -->
+        <div class="navbar-header">
+            {% if request.session.permission == 1 %}
+                <a href="{% url 'dashboard' %}" class="navbar-brand">
+                <span class="navbar-logo"></span>
+                Doo-Q
+                เจ้าหน้าที่ {{ request.session.name }}
+            {% else %}
+                <a href="{% url 'calendar' %}" class="navbar-brand">
+                <span class="navbar-logo"></span>
+                Doo-Q
+                ผู้ป่วย : {{ request.session.name }}
+            {% endif %}</a>
+            <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+            <span style="width: 100%;  position: relative;font-size: 18px;left: 35%;padding-top: 0.5%;">หน้ากำหนด HN</span>
+        <!-- end navbar-header --><!-- begin header-nav -->
+        <ul class="navbar-nav navbar-right">
+            <li class="dropdown navbar-user">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    {% if request.session.permission == 1 %}
+                        {% for datahospitals in datahospital %}
+                            {% if dataST.Hid == datahospitals.Hid %}
+                                <span class="d-none d-md-inline" style="font-size: 18px">{{ datahospitals.Hname }} -
+                                    {% for dataDPMs in dataDPM %}
+                                        {% if  dataDPMs.Did == Dids %}
+                                            {{ dataDPMs.Dname }}
+                                        {% endif %}
+                                    {% endfor %}</span>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {% if hospitalname %}
+                            <span class="d-none d-md-inline"
+                                  style="font-size: 18px">{{ hospitalname }} - {{ DPM }} </span>
+                        {% endif %}
+                    {% endif %}
+                    {% if request.session.hn %}
+                        <span class="d-none d-md-inline"
+                              style="font-size: 18px">กำลังใช้บริการ - {{ request.session.hospital }} </span>
+                    {% endif %}
+                </a>
+            </li>
+        </ul>
+        <!-- end header navigation right -->
+    </div>
+    <!-- end #header -->
+
+    <!-- begin #sidebar -->
+    <div id="sidebar" class="sidebar">
+        <!-- begin sidebar scrollbar -->
+        <div data-scrollbar="true" data-height="100%">
+            <!-- begin sidebar user -->
+            <ul class="nav">
+                {% if request.session.permission == 1 %}
+                    <li>
+                        <a href="{% url 'dashboard' %}">
+                            <i class="material-icons">dashboard</i>
+                            <span>dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'callqueue2' %}">
+                            <i class="material-icons">calendar_today</i>
+                            <span>เรียกคิว</span>
+                        </a>
+                    </li>
+                    <li >
+                        <a href="{% url 'vtfbooking' %}">
+                            <i class="material-icons">calendar_today</i>
+                            <span>รับคิว</span>
+                        </a>
+                    </li>
+                    <li class="has-sub active">
+                        <a href="{% url 'staff' %}">
+                            <i class="material-icons">local_hospital</i>
+                            <span style="text-align: left">แผนก/กลุ่มงาน</span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li class="has-sub">
+                                <a href="{% url 'sthos' %}">
+                                    <b class="caret"></b>
+                                    <span style="text-align: left">หมอ/เจ้าหน้าที่(ตามสังกัด)</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="sub-menu">
+                            <li class="has-sub">
+                                <a href="{% url 'doctor' %}">
+                                    <b class="caret"></b>
+                                    <span>แผนรับคนไข้</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="{% url 'mnbook' %}">
+                            <i class="material-icons">date_range</i>
+                            <span>กำหนดช่วงเวลา</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'staffinfo' %}">
+                            <i class="material-icons">supervised_user_circle</i>
+                            <span>ข้อมูลส่วนตัว</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{% url 'calendar' %}">
+                            <i class="material-icons">calendar_today</i>
+                            <span>จองคิว</span>
+                        </a>
+                    </li>
+                    <li  class="active" style="background-color: mediumseagreen">
+                        <a href="{% url 'person' %}">
+                            <i class="material-icons">calendar_today</i>
+                            <span>HN</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'personinfo' %}">
+                            <i class="material-icons">supervised_user_circle</i>
+                            <span>ข้อมูลส่วนตัว</span>
+                        </a>
+                    </li>
+                {% endif %}
+                <li>
+                    <a href="{% url 'dessession' %}" class="btn btn-default">
+                        <i class="material-icons">logout</i>
+                        <span style="color: black;">ออกจากระบบ</span>
+                    </a>
+                </li>
+            </ul>
+            <!-- end sidebar nav -->
+        </div>
+        <!-- end sidebar scrollbar -->
+    </div>
+    <div class="sidebar-bg"></div>
+    <div class="content" style="font-size: 18px;">
+        <!-- begin container -->
+        <div class="search-banner has-bg">
+            <!-- begin bg-cover -->
+            <!-- end bg-cover -->
+            <!-- begin container -->
+            <div class="container">
+
+            </div>
+            <!-- end container -->
+        </div>
+        <br>
+
+        <div class="card card-forum mb-3">
+            <!-- begin card-header -->
+            <div class="card-header f-w-600">
+                <div class="input-group">
+                    <span class="m-r-3">HN</span> &nbsp; &nbsp;<input type="text" id="myInput" id="myInputHN"
+                                                                      onkeyup="myFunctionHN()"
+                                                                      class="form-control form-control-lg"
+                                                                      placeholder="ค้นหา"/>
+                    <button class="btn btn-gray"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+            <br>
+            <!-- end card-header -->
+            <!-- begin forum-list -->
+            <ul class="forum-list">
+                <form class="form-horizontal form-bordered" action="{% url 'addhn' %}" method="post">
+                    {% csrf_token %}
+                    <table width="100%" id="myTableHN"
+                           class="table test-list">
+                        <thead style="font-size: 18px;">
+                        <tr class="odd gradeX">
+                            <th class="text-nowrap">HN</th>
+                            <th class="text-nowrap"></th>
+                            <th class="text-nowrap">โรงพยาบาล</th>
+                            <th class="text-nowrap"></th>
+                        </tr>
+                        </thead>
+                        <tbody style="font-size: 18px;">
+                        {% for HNS in HN %}
+                            {% for hospitals in hospital %}
+                                {% if HNS.HNhid == hospitals.Hid %}
+                                    <tr class="odd gradeX">
+                                        <td>
+                                            <input id="inputDatabaseName{{ HNS.id }}" type="text" class="form-control"
+                                                   name="HN{{ hospitals.Hid }}"
+                                                   value="{{ HNS.HN }}">
+                                            <input type="hidden" class="form-control" name="HNid{{ hospitals.Hid }}"
+                                                   value="{{ HNS.id }}">
+                                        </td>
+
+                                        <td></td>
+                                        <td>{{ hospitals.Hname }} </td>
+                                        {% if request.session.hn == HNS.HN %}
+                                            <td style="text-align: right">
+                                                <a href="{% url 'settingHNweb' HNS.id %}" class="btn btn-success">เลือกใช้บริการ</a>
+                                            </td>
+                                        {% else %}
+                                            <td style="text-align: right">
+                                                <a href="{% url 'settingHNweb' HNS.id %}" class="btn btn-default">เลือกใช้บริการ</a>
+                                            </td>
+                                        {% endif %}
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                        {% for hospitaledit in hospitaledit %}
+                            <tr class="odd gradeX">
+                                <td>
+                                    <input type="text" class="form-control inputDatabaseName"
+                                           name="HNnew{{ hospitaledit.0 }}"
+                                           value="">
+                                </td>
+                                <td></td>
+                                <td>{{ hospitaledit.1 }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <!-- end info-container -->
+                    </li>
+            </ul>
+            <!-- end forum-list -->
+        </div>
+           <div class="col-xl-12 fixed-bottom" id="showbtns"
+                                                     style="background-color: black;height: 75px;">
+                                                    <div style="color: white;text-align: center;font-size: 18px;">
+                                                        <p style="margin-top: 1%">คุณต้องการบันทึก
+                                                            <button type="submit"
+                                                                    class="btn btn-primary pull-right width-80 ">ยืนยัน
+                                                            </button> &nbsp;
+
+                <a href="{% url 'person' %}" class="btn btn-danger pull-right width-80">ยกเลิก</a>
+
+                                                        </p>
+                                                    </div>
+                                                </div>
+        </form>
+         <div class="col-xl-12">
+             {% if request.session.hn == ''%}
+             <small class="pull-right" style="color: red;font-size: 14px;">(หมายเหตุ: กรุณากดเลือกใช้บริการ ในกรณีที่ผู้ใช้ยังไม่มี HN ให้ผู้ใช้เพิ่ม HN ก่อนใช้บริการ)</small>
+             {% endif %}
+    </div>
+    </div>
+    </div>
+
+    <!-- end container -->
+    </div>
+    </div>
+    <script>
+        $('#showbtns').hide();
+        {% for HNS in HN %}
+            $('input#inputDatabaseName{{ HNS.id }}').keydown(function (e) {
+                if (e.keyCode == 32) {
+                    return false;
+                }
+            });
+            $(document).ready(function () {
+                $('#inputDatabaseName{{ HNS.id }}').keyup(function () {
+                    var inputVal{{ HNS.id }} = document.getElementById("inputDatabaseName{{ HNS.id }}").value;
+                    if (inputVal{{ HNS.id }} == "{{ HNS.HN }}") {
+                    } else {
+                        $('#showbtns').show();
+                    }
+                });
+            });
+        {% endfor %}
+        $(document).ready(function () {
+            $('.inputDatabaseName').keyup(function () {
+                $('#showbtns').show();
+            });
+        });
+      function myFunctionHN() {
+            var input, filter, table, tr, td, cell, i, j;
+            input = document.getElementById("myInputHN");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTableHN");
+            tr = table.getElementsByTagName("tr");
+            for (i = 1; i < tr.length; i++) {
+                // Hide the row initially.
+                tr[i].style.display = "none";
+
+                td = tr[i].getElementsByTagName("td");
+                for (var j = 0; j < td.length; j++) {
+                    cell = tr[i].getElementsByTagName("td")[j];
+                    if (cell) {
+                        if (cell.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+
+    </script>
+{% endblock %}

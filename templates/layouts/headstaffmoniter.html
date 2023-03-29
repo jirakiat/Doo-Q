@@ -1,0 +1,165 @@
+{% load static %}
+
+<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="{% static 'doqs/assets/css/material/app.min.css' %}" rel="stylesheet"/>
+<!-- ================== END BASE CSS STYLE ================== -->
+
+<!-- ================== BEGIN PAGE LEVEL CSS STYLE ================== -->
+<link href="{% static 'doqs/assets/plugins/jvectormap-next/jquery-jvectormap.css' %}" rel="stylesheet"/>
+<link href="{% static 'doqs/assets/plugins/gritter/css/jquery.gritter.css' %}" rel="stylesheet"/>
+<link href="{% static 'doqs/assets/plugins/nvd3/build/nv.d3.css"' %}" rel="stylesheet"/>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet">
+<link href="{% static 'doqs/assets/plugins/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'doqs/assets/plugins/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}"
+      rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css" data-print="true" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar-scheduler/1.9.4/scheduler.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar-scheduler/1.9.4/scheduler.min.css" />
+<style>
+      #calendarstaff {
+    max-width: 1100px;
+    margin: 50px auto;
+  }
+
+    body {
+        font-family: 'Kanit', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    table.history {
+        font-size: 18px;
+    }
+
+    input::-webkit-input-placeholder {
+        font-size: 14px;
+    }
+
+    .modalcenter {
+        top: 20%;
+    }
+
+    .scollshow {
+        height: auto;
+        overflow: scroll;
+    }
+
+    .inner-border::-webkit-scrollbar {
+        display: none;
+    }
+
+    .fc .fc-view-container .fc-body .fc-bg td.fc-today {
+        background: #fffadb;
+    }
+
+    .fc-event {
+        cursor: pointer;
+    }
+
+    .fc-list-item {
+        cursor: pointer;
+    }
+</style>
+<script>
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var today = moment();
+    $('#calendarstaff').fullCalendar({
+      locals:'th',
+      droppable: true,
+      defaultView: 'Week',
+      header: false,
+      defaultDate: today,
+      navLinks: false, // can click day/week names to navigate views
+      editable: true,
+      eventLimit: true, // allow "more" link when too many events
+      schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+      /*events: [
+
+          {
+              title  : 'event1',
+              start  : today,
+              imageurl:'doqs/assets/images/recipe/salad.jpg'
+          }
+
+      ],*/
+      /*views: {
+          agendaWeek: {
+              agendaEventMinHeight: 150,
+              allDaySlot: false,
+              slotLabelInterval: { hours: 6},
+              slotDuration: { hours: 1},
+              duration: { days: 7}
+          }
+      },*/
+      eventRender: function (event, element) {
+        element.find(".fc-event-title").remove();
+        element.find(".fc-event-time").remove();
+        var new_description = '#';
+        element.append(new_description);
+
+      },
+      now: today,
+      /*header: {
+          left: 'promptResource',
+          center: '',
+          right: ''
+
+      },*/
+      footer: {
+        left: 'promptResource',
+        center: '',
+        right: ''
+      },
+      customButtons: {
+        promptResource: {
+          text: '+ add course',
+          click: function () {
+            var title = prompt('Course name');
+            if (title) {
+              $('#calendar').fullCalendar(
+                      'addResource',
+                      {title: title},
+                      true // scroll to the new resource?
+              );
+            }
+          }
+        }
+      },
+      views: {
+        Week: {
+          type: 'timeline',
+          duration: {Days: '1'},
+          slotLabelInterval: {hours: 24},
+          slotDuration: {hours: 24},
+        }
+      },
+      resourceLabelText: 'Meal',
+      resourceRender: function (resource, cellEls) {
+        cellEls.on('click', function () {
+          if (confirm('Are you sure you want to delete ' + resource.title + '?')) {
+            $('#calendar').fullCalendar('removeResource', resource);
+          }
+        });
+      },
+      resources: [
+        {id: '2', title: '8.30-12.30', eventColor: 'red'},
+        {id: '3', title: '9.30-11.30', eventColor: 'red'},
+        {id: '4', title: '8.30-12.30', eventColor: 'red'},
+        {id: '5', title: '8.30-12.30', eventColor: 'red'},
+      ],
+
+      events: [
+        {id: '1', resourceId: '4', start: today, end: today, title: 'event 1'},
+
+      ]
+
+    });
+  });
+
+</script>

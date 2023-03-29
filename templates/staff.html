@@ -1,0 +1,282 @@
+{% extends 'masterweb.html' %}
+{% block show %}
+    {% load static %}
+   <div id="page-loader" class="fade show">
+    <span class="spinner"></span>
+</div>
+<!-- end #page-loader -->
+
+<!-- begin #page-container -->
+<div id="page-container" class="fade page-sidebar-fixed page-header-fixed">
+    <!-- begin #header -->
+    <div id="header" class="header navbar-default">
+        <!-- begin navbar-header -->
+        <div class="navbar-header">
+            {% if request.session.permission == 1 %}
+                <a href="{% url 'dashboard' %}" class="navbar-brand">
+                <span class="navbar-logo"></span>
+                Doo-Q
+                เจ้าหน้าที่ {{ request.session.name }}
+            {% else %}
+                <a href="{% url 'calendar' %}" class="navbar-brand">
+                <span class="navbar-logo"></span>
+                Doo-Q
+                ผู้ป่วย : {{ request.session.name }}
+            {% endif %}</a>
+            <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+            <span style="width: 100%;  position: relative;font-size: 18px;left: 35%;padding-top: 0.5%;">หน้าแผนกกลุ่มงาน</span>
+        <!-- end navbar-header --><!-- begin header-nav -->
+        <ul class="navbar-nav navbar-right">
+            <li class="dropdown navbar-user">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                 {% if hospitalname %}
+                            <span class="d-none d-md-inline"
+                                  style="font-size: 18px">{{ hospitalname }} - {{ DPM }} </span>
+                        {% endif %}
+                    {% if request.session.permission == 1 %}
+                        {% for datahospitals in datahospital %}
+                            {% if dataST.Hid == datahospitals.Hid %}
+                                <span class="d-none d-md-inline" style="font-size: 18px">{{ datahospitals.Hname }} -
+                                    {% for dataDPMs in dataDPM %}
+                                        {% if  dataDPMs.Did == Dids %}
+                                            {{ dataDPMs.Dname }}
+                                        {% endif %}
+                                    {% endfor %}</span>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                    {% endif %}
+                    {% if request.session.hn %}
+                        <span class="d-none d-md-inline"
+                              style="font-size: 18px">กำลังใช้บริการ - {{ request.session.hospital }} </span>
+                    {% endif %}
+                </a>
+            </li>
+        </ul>
+        <!-- end header navigation right -->
+    </div>
+    <!-- end #header -->
+
+    <!-- begin #sidebar -->
+    <div id="sidebar" class="sidebar">
+        <!-- begin sidebar scrollbar -->
+        <div data-scrollbar="true" data-height="100%">
+            <!-- begin sidebar user -->
+            <ul class="nav">
+                {% if request.session.permission == 1 %}
+                    <li>
+                        <a href="{% url 'dashboard' %}">
+                            <i class="material-icons">dashboard</i>
+                            <span>dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'callqueue2' %}">
+                            <i class="material-icons">calendar_today</i>
+                            <span>เรียกคิว</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'vtfbooking' %}">
+                            <i class="material-icons">calendar_today</i>
+                            <span>รับคิว</span>
+                        </a>
+                    </li>
+                    <li class="has-sub active">
+                        <a href="{% url 'staff' %}"style="background-color: mediumseagreen">
+                            <i class="material-icons">local_hospital</i>
+                            <span style="text-align: left">แผนก/กลุ่มงาน</span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li class="has-sub">
+                                <a href="{% url 'sthos' %}">
+                                    <b class="caret"></b>
+                                    <span style="text-align: left">แพทย์/เจ้าหน้าที่(ตามสังกัด)</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="sub-menu">
+                            <li class="has-sub">
+                                <a href="{% url 'doctor' %}">
+                                    <b class="caret"></b>
+                                    <span>แผนรับคนไข้</span>
+                                </a>
+                            </li>
+                        </ul>
+                     <ul class="sub-menu" >
+                            <li class="has-sub">
+                                <a href="{% url 'tagdpm' %}">
+                                    <b class="caret"></b>
+                                    <span style="text-align: left;">เพิ่มแท็กกิจกรรม</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="{% url 'mnbook' %}">
+                            <i class="material-icons">date_range</i>
+                            <span>กำหนดช่วงเวลา</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'staffinfo' %}">
+                            <i class="material-icons">supervised_user_circle</i>
+                            <span>ข้อมูลส่วนตัว</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{% url 'calendar' %}">
+                            <i class="material-icons">calendar_today</i>
+                            <span>จองคิว</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'person' %}">
+                            <i class="material-icons">calendar_today</i>
+                            <span>HN</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'personinfo' %}">
+                            <i class="material-icons">supervised_user_circle</i>
+                            <span>ข้อมูลส่วนตัว</span>
+                        </a>
+                    </li>
+                {% endif %}
+                <li>
+                    <a href="{% url 'dessession' %}" class="btn btn-default">
+                        <i class="material-icons">logout</i>
+                        <span style="color: black;">ออกจากระบบ</span>
+                    </a>
+                </li>
+            </ul>
+            <!-- end sidebar nav -->
+        </div>
+        <!-- end sidebar scrollbar -->
+    </div>
+    <div class="sidebar-bg"></div>
+    <div class="content" style="font-size: 18px;">
+        {% if dataST.Hid == null %}
+            <script type="text/javascript">
+                $(window).on('load', function () {
+                    $('#modal-dialog').modal('show');
+                });
+            </script>
+            <div class="modal fade" id="modal-dialog">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">เลือกโรงพยาบาลที่สังกัด</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        </div>
+                        <form class="form-horizontal form-bordered" action="{% url 'settingHn' %}" method="post">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <select class="form-control mb-3" name="Hid">
+                                    <option value="" selected>เลือกโรงพยาบาลสังกัด</option>
+                                    {% for datahospitals in datahospitales %}
+                                        <option value="{{ datahospitals.Hid }}">{{ datahospitals.Hname }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">ยืนยัน</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <!-- begin container -->
+
+
+        <div class="card card-forum mb-3">
+            <!-- begin card-header -->
+            <div class="card-header f-w-600">
+                <div class="input-group">
+                    <span class="m-r-3">แผนก/กลุ่มงาน</span>&nbsp;<input type="text" id="myInput1"
+                                                                         class="form-control form-control-lg"
+                                                                         placeholder="ค้นหา"/>
+                    <button class="btn btn-gray"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+            <br>
+            <!-- end card-header -->
+            <!-- begin forum-list -->
+            <ul class="forum-list">
+                <table width="100%"
+                       class="table test-list">
+                    <thead style="font-size: 18px;">
+                    <tr class="odd gradeX">
+                        <th class="text-nowrap">#</th>
+                        <th class="text-nowrap">แผนก</th>
+                    </tr>
+                    </thead>
+                    <tbody style="font-size: 18px;" id="myTable1">
+                        {% for dataDPMs in dataDPM %}
+                            <tr>
+                                {% if dataDPMs == null %}
+                                    <td rowspan="3">ไม่มีข้อมูล</td>
+                                {% endif %}
+                                <td>{{ dataDPMs.Did }}</td>
+                                <td> {{ dataDPMs.Dname }} </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% csrf_token %}
+                <!-- end info-container -->
+                </li>
+            </ul>
+            <!-- end forum-list -->
+        </div>
+        {% if  dataST.Hid  != null %}
+            <div class="float-right">
+                </button>
+                <a href="#modal-message" class="btn btn-outline-primary  width-80" data-toggle="modal"><i
+                        class="fa fas fa-plus"></i></a>
+            </div>
+        {% endif %}
+        {#        </form>#}
+    </div>
+    <div class="modal modal-message fade" id="modal-message">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">เพิ่มแผนก</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <form class="form-horizontal form-bordered" action="{% url 'addDPM' %}" method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-lg-12">
+                                <input class="form-control" type="text" name="Did" placeholder="รหัส">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-12">
+                                <input class="form-control" type="text" name="DPM" placeholder="ชื่อแผนก">
+                                <input class="form-control" type="hidden" name="Hid" value="{{ dataST.Hid }}"
+                                       placeholder="ชื่อแผนก">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit">เพิ่ม</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- end container -->
+    </div>
+    </div>
+{% endblock %}
+

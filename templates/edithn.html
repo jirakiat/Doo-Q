@@ -1,0 +1,74 @@
+{% extends 'masterweb.html' %}
+{% block show %}
+    <div class="content" id="content" style="font-size: 18px;">
+        <div class="col-md-3">
+            <a class="btn btn-default"  href="{% url 'person' %}" style="color: black"><i
+                    class="fas fa-angle-double-left"></i> กลับ </a>
+        </div>
+        <div class="container">
+            <div class="row">
+                <br> <br>
+                <!-- begin col-6 -->
+                <div class="col-xl-12">
+                    <!-- begin panel -->
+                    <div class="panel panel-inverse" data-sortable-id="form-plugins-1">
+                        <!-- begin panel-heading -->
+                        <div class="panel-heading">
+                            <h4 class="panel-title">แก้ไข</h4>
+                            <div class="panel-heading-btn">
+                            </div>
+                        </div>
+                        <!-- end panel-heading -->
+                        <!-- begin panel-body -->
+                        <div class="panel-body panel-form">
+                            <form class="form-horizontal form-bordered" action="{% url 'updatehn' %}"
+                                  method="post">
+                                {% csrf_token %}
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label">HN</label>
+                                    <div class="col-lg-8">
+                                        <div class="input-group date">
+                                            <input placeholder="HN" value="{{ x.HN }}" type="text" class="form-control"
+                                                   name="HN"/>
+                                            <input value="{{ x.id }}" type="hidden" class="form-control"
+                                                   name="id"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label">โรงพยาบาล</label>
+                                    <div class="col-lg-8">
+                                        <div class="input-group date">
+                                            <select class="form-control mb-3" name="hospitalid">
+                                                {% for datahospitals in datahospital %}
+                                                    {% if x.HNhid == datahospitals.Hid %}
+                                                        <option value="{{ x.HNhid }}"
+                                                                selected="">{{ datahospitals.Hname }}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% for datahospitals in datahospital %}
+                                                    {% if datahospitals.Hid != x.HNhid %}
+                                                        <option value="{{ datahospitals.Hid }}">{{ datahospitals.Hname }}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label"></label>
+                                    <div class="col-lg-8">
+                                        <div class="input-group date">
+                                            <button type="submit" class="btn btn-primary">บันทึก</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- end panel-body -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

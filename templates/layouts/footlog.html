@@ -1,0 +1,58 @@
+{% load static %}
+<script src="{% static 'doqs/assets/js/app.min.js' %}"></script>
+<script src="{% static 'doqs/assets/js/theme/apple.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/sweetalert/dist/sweetalert.min.js' %}"></script>
+<script src="{% static 'doqs/assets/js/demo/ui-modal-notification.demo.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/highlight.js/highlight.min.js' %}"></script>
+<script src="{% static 'doqs/assets/js/demo/render.highlight.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/flot/jquery.flot.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/flot/jquery.flot.time.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/flot/jquery.flot.resize.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/flot/jquery.flot.pie.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/jquery-sparkline/jquery.sparkline.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/jvectormap-next/jquery-jvectormap.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/jvectormap-next/jquery-jvectormap-world-mill.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js' %}"></script>
+<script src="{% static 'doqs/assets/js/demo/dashboard.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'doqs/assets/js/demo/table-manage-responsive.demo.js' %}"></script>
+<script>
+    document.getElementById("btn-regis").disabled = true;
+    $(document).ready(function () {
+        $(window).keydown(function (event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                return false;
+            }
+        });
+    });
+    $(() => {
+        $('#password, #re-password').on('keyup', function () {
+            if ($('#password').val() == "" && $('#re-password').val() == "") {
+                $('#submit-pass').prop('disabled', true);
+                $('#message').hide();
+            } else if ($('#password').val() == $('#re-password').val()) {
+                $('#submit-pass').prop('disabled', false);
+                $('#message').show().html('รหัสผ่านตรงกัน').css('color', 'green');
+                document.getElementById("btn-regis").disabled = false;
+            } else {
+                $('#submit-pass').prop('disabled', true);
+                $('#message').show().html('รหัสผ่านไม่ตรงกัน').css('color', 'red');
+            }
+        });
+    });
+    $(function () {
+        $("#btnSubmit").click(function () {
+            var password = $("#password").val();
+            var confirmPassword = $("#re-password").val();
+            if (password != confirmPassword) {
+                alert("รหัสผ่านไม่ตรงกัน.");
+                return false;
+            }
+            return true;
+        });
+    });
+</script>

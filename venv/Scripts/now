@@ -1,0 +1,3 @@
+#!C:\xampp\htdocs\djangoProject\venv\Scripts\python.exe
+from now.main import main
+main()

@@ -1,0 +1,428 @@
+{% extends 'masterbooking.html' %}
+{% block show %}
+    <div class="content" id="content" style="font-size: 18px;">
+        <div id="divshowtest" style="width: 84%;height: 400px">
+            <div class="panel panel-inverse" data-sortable-id="table-basic-2">
+						<!-- begin panel-heading -->
+						<div class="panel-heading">
+							<h4 class="panel-title"> ประวัติผู้ป่วย <label id="showname"></label></h4>
+						</div>
+						<!-- end panel-heading -->
+						<!-- begin panel-body -->
+						<div class="panel-body" style="height: 400px;">
+						  <div>
+                            <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                                <table width="100%" class="table table-bordered table-striped mb-0 showhistory ">
+                                    <thead style="font-size: 18px">
+                                    <tr class="odd gradeX">
+                                        </th>
+                                        <th class="text-nowrap" style="text-align: left;">วันที่</th>
+                                        <th class="text-nowrap" style="text-align: left;">เวลา</th>
+                                        <th class="text-nowrap" style="text-align: left;"> แพทย์/เจ้าหน้าที่</th>
+                                        <th class="text-nowrap" style="text-align: left;"> แผนก</th>
+                                        <th class="text-nowrap" style="text-align: left;"> กิจกรรม</th>
+                                        <th class="text-nowrap" style="text-align: left;"> สถานะ</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody style="font-size: 18px;" id="showhistory">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+							<!-- end table-responsive -->
+						</div>
+						<!-- end panel-body -->
+						<!-- begin hljs-wrapper -->
+
+						<!-- end hljs-wrapper -->
+					</div>
+        </div>
+        <div class="col-xl-12">
+            <div class="row">
+                {% if check == null %}
+                    <div class="col-xl-3">
+                        <form class="form-horizontal form-bordered " id="checkeiei" action="{% url 'stmcheck' %}" method="post">
+                            {% csrf_token %}
+                            <select class="form-control"
+                                    name="re_sta">
+                                {% for dataPersons in dataPerson %}
+                                    {% for dataOFFalls in dataOFFall %}
+                                        {% if dataPersons.Pid == dataOFFalls.Pid %}
+                                            {% if  dataPersons.Pid == request.session.user_id %}
+                                                <option value="{{ dataPersons.Pid }}"
+                                                        selected>{{ dataPersons.Pname }}</option>
+                                            {% endif %}
+                                            {% if dataPersons.Ppassword == 'Nopassword'  and dataPersons.Pid !=  request.session.user_id %}
+                                                <option value="{{ dataPersons.Pid }}">{{ dataPersons.Pname }}</option>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                            </select>
+                    </div>
+                    <div class="col-xl-1">
+                        <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                    </div>
+                    </form>
+                {% endif %}
+                {% if check == 1 %}
+                    <div class="col-xl-3">
+                        <form class="form-horizontal form-bordered" action="{% url 'stmcheck' %}" method="post">
+                            {% csrf_token %}
+                            <select class="form-control"
+                                    name="re_sta" id="staff">
+                                {% for dataPersons in dataPerson %}
+                                    {% for dataOFFalls in dataOFFall %}
+                                        {% if dataPersons.Pid == dataOFFalls.Pid %}
+                                            {% if  dataPersons.Pid == personid %}
+                                                <option value="{{ dataPersons.Pid }}"
+                                                        selected>{{ dataPersons.Pname }}</option>
+                                            {% endif %}
+                                            {% if dataPersons.Ppassword == 'Nopassword'  and dataPersons.Pid != personid %}
+                                                <option value="{{ dataPersons.Pid }}">{{ dataPersons.Pname }}</option>
+                                            {% endif %}
+                                            {% if dataPersons.Pid == request.session.user_id   and dataPersons.Pid != personid %}
+                                                <option value="{{ dataPersons.Pid }}">{{ dataPersons.Pname }}</option>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                            </select>
+                    </div>
+                    <div class="col-xl-1">
+                        <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                    </div>
+                    </form>
+                {% endif %}
+                <div class="col-lg-2">
+                    <span style="font-size: 14px" id="showdate"></span>
+                    <br>
+                    <span style="font-size: 14px" id="showtime"></span>
+                </div>
+                <div class="col-xl-3">
+                      <span class="float-right"
+                            style="color: black;font-size: 14px">จำนวนผู้ป่วยที่แพทย์รับทั้งวัน  <span id="number" style="font-size: 14px"></span></span>
+                    <br>
+                    <span class="float-right"
+                          style="color: black;font-size: 14px">จำนวนผู้ป่วยที่แผนกรับทั้งวัน <span id="dpm" style="font-size: 14px"></span></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-12">
+            <!-- begin panel -->
+            <div class="panel panel-inverse panel-with-tabs" data-sortable-id="ui-unlimited-tabs-1">
+                <!-- begin panel-heading -->
+                <div class="panel-heading p-0">
+                    <!-- begin nav-tabs -->
+                    <div class="tab-overflow">
+                        <ul class="nav nav-tabs nav-tabs-inverse">
+                            <li class="nav-item"><a href="#nav-tab-1" data-toggle="tab" class="nav-link active">รับคิว
+                            </a></li>
+                        </ul>
+                    </div>
+                    <!-- end nav-tabs -->
+                    <div class="panel-heading-btn mr-2 ml-2 d-flex">
+                    </div>
+                </div>
+                <!-- end panel-heading -->
+                <!-- begin tab-content -->
+                <div class="panel-body tab-content ">
+                    <!-- begin tab-pane -->
+                    <div class="tab-pane fade active show" id="nav-tab-1">
+                        <div class="panel panel-inverse" style="background: white">
+                            <!-- begin panel-heading -->
+                            <div class="row col-lg-12" style="margin: auto;height: auto;width: auto">
+                                <div class="col-xl-6 col-sm-6">
+                                    <br>
+                                    {% if error != 5 %}
+
+                                        <div id="calendarstaff" class="calendar scollshow inner-border  height-lg"
+                                             style="height: 350px;width: 100%">
+                                        </div>
+                                    {% else %}
+                                        <div class="col-lg-12">
+                                            <div class="alert alert-danger fade show m-b-10">
+                                                <span class="close" data-dismiss="alert">&times;</span>
+                                                ยังไม่ได้กำหนดเวลารับนัด
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-xl-6 col-sm-6">
+                                    <br>
+                                    <table width="100%" class="table test-list ">
+                                        <thead style="font-size: 18px">
+                                        <tr class="odd gradeX">
+                                            </th>
+                                            <th class="text-nowrap"><input type="checkbox" class="check1"
+                                                                           onclick="checkalltime(this);"></th>
+                                            <th class="text-nowrap" style="text-align: left;">ผู้ป่วย</th>
+                                            <th class="text-nowrap" style="text-align: left;">กิจกรรม</th>
+                                            <th class="text-nowrap" style="text-align: left;"> แพทย์/เจ้าหน้าที่
+                                        </tr>
+                                        </thead>
+                                        <tbody style="font-size: 18px;" id="myTablemoniter">
+
+                                        </tbody>
+                                    </table>
+                                    <div class="float-right">
+                                        <button class="btn btn-danger width-80  btn-noverify">ปฏิเสธ</button>
+                                        <button class="btn btn-primary width-80 btn-vertify">รับนัด</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end tab-pane -->
+                    <!-- begin tab-pane -->
+                    <!-- end tab-pane -->
+                </div>
+                <!-- end tab-content -->
+            </div>
+        </div>
+        {% csrf_token %}
+
+    </div>
+    <script>
+        var z = 1
+        {% if check == null %}
+        setTimeout(function(){    document.getElementById("checkeiei").submit(); }, 1);
+        {% endif %}
+        $(".btn-dishis").click(function () {
+            $('#historyshow').hide();
+        });
+        $('#historyshow').hide();
+        $(document).ready(function () {
+            var calendar = $('#calendarstaff').fullCalendar({
+                    eventClick: function (info) {
+                        alert('Event: ' + info.event.title);
+                        alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+                        alert('View: ' + info.view.type);
+
+                        // change the border color just for fun
+                        info.el.style.borderColor = 'red';
+                    },
+                    displayEventTime: true,
+                    eventLimit: true,
+                    draggable: true,
+                    defaultView: 'listDay',
+                    locale: 'th',
+                    firstDay: 0,
+                    header: {
+                        left: 'listDay',
+                        center: 'title',
+                        right: 'prev,next',
+                    },
+                    events: [
+                        {% for myresults in bookingshow %}
+                            {
+                                start: '{{ myresults.1 }}T{{ myresults.2}}',
+                                end: '{{ myresults.1 }}T{{ myresults.3 }}',
+                                title: '{{ myresults.5 }} / {{ myresults.4 }}',
+                                color: '{{ myresults.6 }}',
+                                school: '{{ myresults.0 }}',
+                            },
+                        {% endfor %}
+                    ],
+                    eventClick: function (event, jsEvent, view) {
+                        var dateList = event.school
+                        var OFid =
+                        {{OFid}}
+                        var test_list_ids = JSON.stringify(dateList);
+                        $.ajax({
+                            url: "{% url 'filterstaffmoniter' %}",
+                            type: 'POST',
+                            data: {
+                                'test_list_ids': test_list_ids,
+                                'OFid': OFid,
+                                'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()
+                            },
+                            success: function (data) {
+                                document.getElementById('dpm').innerHTML = data.numberDPMtoday;
+                                document.getElementById('number').innerHTML = data.numbertoday;
+                                document.getElementById('showtime').innerHTML = data.timese;
+                                var dates = new Date(data.dates);
+                                document.getElementById('showdate').innerHTML = toThaiDateString(dates);
+                                jQuery.each(data.bookingper, function (index, item) {
+
+                                    $('.description' + item[0] + '').html("&nbsp;" + item[3]);
+                                    $('.startdate' + item[0] + '').html("&nbsp;" + item[3]);
+                                    $('.enddate' + item[0] + '').html("&nbsp;" + item[3]);
+                                    if (index == 0) {
+                                        $('.tr-append-add').remove();
+                                    }
+                                    if (item[5] == 0) {
+                                        $('#myTablemoniter').append('<tr class="tr-append-add"> ' +
+                                            '<td  style="width: 10%;">' +
+                                            '<input type="checkbox" id="checkbox1" name="test" class="checkbox-hospitaltime-id checkbox-timehos check1" value="' + item[0] + '">' +
+                                            '</td>' +
+                                            '<td style="width: 30%;text-align: left">' +
+                                            '<span>' + item[3] + ' : ' +
+                                            '<button  data-click="panel-collapse" style="font-size: 18px;" onclick="dosomething(this.value)" class="btn btn-link" value="' + item[0] + '">' + item[2] + '' +
+                                            '</button>' +
+                                            '</span>' +
+                                            '</td>' +
+                                            '<td style="width: 30%;text-align: left">' +
+                                            '<span>กิจกรรม: ' + item[1] + '' +
+                                            '</span>' +
+                                            '</td>' +
+                                            '<td style="width: 30%;text-align: left">' +
+                                            '<span>' + item[4] + '' +
+                                            '</span>' +
+                                            '</td>' +
+                                            '</tr>'
+                                        )
+                                    }
+                                    if (item[5] == 1 || item[5] == 3) {
+                                        $('#myTablemoniter').append('<tr class="tr-append-add"> ' +
+                                            '<td  style="width: 10%">' +
+                                            '<input type="checkbox" id="checkbox1" name="test" class="checkbox-hospitaltime-id checkbox-timehos check1" value="' + item[0] + '" disabled>' +
+                                            '</td>' +
+                                            '<td style="width: 30%;text-align: left">' +
+                                            '<span>' + item[3] + ' : ' +
+                                            '<button   data-click="panel-collapse" style="font-size: 18px;" onclick="dosomething(this.value)" class="btn btn-link" value="' + item[0] + '">' + item[2] + '' +
+                                            '</button>' +
+                                            '</span>' +
+                                            '</td>' +
+                                            '<td style="width: 30%;text-align: left">' +
+                                            '<span>กิจกรรม: ' + item[1] + '' +
+                                            '</span>' +
+                                            '</td>' +
+                                            '<td style="width: 30%;text-align: left;color: green">' +
+                                            '<span>' + item[4] + '&nbsp;รับนิด' +
+                                            '</span>' +
+                                            '</td>' +
+                                            '</tr>')
+                                    }
+                                    if (item[5] == 2 || item[5] == 4) {
+                                        $('#myTablemoniter').append('<tr class="tr-append-add"> ' +
+                                            '<td  style="width: 10%;">' +
+                                            '<input type="checkbox" id="checkbox1" name="test" class="checkbox-hospitaltime-id checkbox-timehos check1" value="' + item[0] + '" disabled>' +
+                                            '</td>' +
+                                            '<td style="width: 30%;text-align: left">' +
+                                            '<span>' + item[3] + ' : ' +
+                                            '<button  data-click="panel-collapse" style="font-size: 18px;" onclick="dosomething(this.value)" class="btn btn-link" value="' + item[0] + '">' + item[2] + '' +
+                                            '</button>' +
+                                            '</span>' +
+                                            '</td>' +
+                                            '<td style="width: 30%;text-align: left">' +
+                                            '<span>กิจกรรม: ' + item[1] + '' +
+                                            '</span>' +
+                                            '</td>' +
+                                            '<td style="width: 30%;text-align: left;color: red">' +
+                                            '<span>' + item[4] + '&nbsp;ปฏิเสธ' +
+                                            '</span>' +
+                                            '</td>' +
+                                            '</tr>')
+                                    }
+                                });
+
+                            }
+                        })
+                    }
+                })
+            ;
+        });
+
+        function checkalltime(source) {
+            var checkboxes = document.querySelectorAll('input[id="checkbox1"]');
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i] != source)
+                    checkboxes[i].checked = source.checked;
+            }
+        }
+
+        $(".btn-noverify").click(function () {
+            var test_list_ids = [];
+            $(".checkbox-timehos:checked").each(function () {
+                test_list_ids.push(this.value);
+            });
+
+            var test_list_ids = JSON.stringify(test_list_ids);
+
+            $.ajax({
+                url: "{% url 'verifydontbooking' %}",
+                type: 'POST',
+                data: {
+                    'test_list_ids': test_list_ids,
+                    'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()
+                },
+            })
+            setTimeout(function () {
+                window.location.reload(true);
+            }, 300);
+        });
+        $(".btn-vertify").click(function () {
+            $('.scrollable_notifications').toggle();
+            var test_list_ids = [];
+            $(".checkbox-timehos:checked").each(function () {
+                test_list_ids.push(this.value);
+            });
+            var test_list_ids = JSON.stringify(test_list_ids);
+            $.ajax({
+                url: "{% url 'verifybooking' %}",
+                type: 'POST',
+                data: {
+                    'test_list_ids': test_list_ids,
+                    'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()
+                },
+            })
+            setTimeout(function () {
+                window.location.reload(true);
+            }, 300);
+        });
+
+        function dosomething(val) {
+            $.ajax({
+                url: "{% url 'filtermodal' %}",
+                type: 'POST',
+                data: {
+                    'idcheck': val,
+                    'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()
+                },
+                success: function (data) {
+                    $('#historyshow').show();
+                    jQuery.each(data.modallist, function (index, item) {
+                        var d = new Date(item[2]);
+                        document.getElementById('showname').innerHTML = item[8];
+                        if (index == 0) {
+                            $('.historyshow').remove();
+                        }
+                        $('#showhistory').append('<tr class="historyshow"> ' +
+                            '<td  style="width: 50px;">' +
+                            '<span>' + toThaiDateString(d) + '' +
+                            '</span>' +
+                            '</td>' +
+                            '<td style="width: 50px;text-align: left">' +
+                            '<span>' + item[3] + ' - ' + item[4] + '' +
+                            '</span>' +
+                            '</td>' +
+                            '<td style="width: 50px;text-align: left">' +
+                            '<span>' + item[5] + '' +
+                            '</span>' +
+                            '</td>' +
+                            '<td style="width: 50px;text-align: left">' +
+                            '<span>' + item[6] + '' +
+                            '</span>' +
+                            '</td>' +
+                            '<td style="width: 50px;text-align: left">' +
+                            '<span>' + item[1] + '' +
+                            '</span>' +
+                            '</td>' +
+                            '<td style="width: 50px;text-align: left">' +
+                            '<span>' + item[7] + '' +
+                            '</span>' +
+                            '</td>' +
+
+                            '</tr>'
+                        )
+                    });
+                      $("#divshowtest").slideToggle("slow");
+                },
+            })
+        }
+
+    </script>
+{% endblock %}
+

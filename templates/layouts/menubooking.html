@@ -1,0 +1,38 @@
+    <div id="page-loader" class="fade show">
+        <div class="material-loader">
+            <svg class="circular" viewBox="25 25 50 50">
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2"
+                        stroke-miterlimit="10"></circle>
+            </svg>
+            <div class="message">Loading...</div>
+        </div>
+    </div>
+    <!-- end #page-loader -->
+
+    <!-- begin #page-container -->
+    <div id="page-container navshow"
+         class="fade page-sidebar-fixed page-header-fixed page-with-wide-sidebar show has-scroll page-sidebar-minified">
+    <!-- begin #header -->
+    <div id="header" class="header navbar-default">
+        <!-- begin navbar-header -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed navbar-toggle-left" data-click="sidebar-minify">
+
+            </button>
+            <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
+
+            </button>
+            <a href="index.html" class="navbar-brand">
+                DoQ
+            </a>
+        </div>
+        <!-- end navbar-header --><!-- begin header-nav -->
+        <ul class="navbar-nav navbar-right">
+
+            <li class="dropdown navbar-user">
+                <a href="{% url 'person' %}" class="checkperson">
+                    <span class="d-none d-md-inline"><i class="fas fa-cog"></i></span>
+                </a>
+            </li>
+        </ul>
+    </div>

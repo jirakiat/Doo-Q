@@ -1,0 +1,303 @@
+{% extends 'masterbooking.html' %}
+{% block show %}
+    <div class="content" id="content" style="font-size: 18px;">
+        <div class="col-xl-12">
+            <div class="row">
+                {% if check == null %}
+                    <div class="col-xl-3">
+                        <form class="form-horizontal form-bordered" action="{% url 'callqueueck' %}" method="post">
+                            {% csrf_token %}
+                            <select class="form-control"
+                                    name="re_sta">
+                                {% for dataPersons in dataPerson %}
+                                    {% for dataOFFalls in dataOFFall %}
+                                        {% if dataPersons.Pid == dataOFFalls.Pid %}
+                                            {% if  dataPersons.Pid == request.session.user_id %}
+                                                <option value="{{ dataPersons.Pid }}"
+                                                        selected>{{ dataPersons.Pname }}</option>
+                                            {% endif %}
+                                            {% if dataOFFalls.Pid == dataPersons.Pid  and dataPersons.Pid != personid and dataOFFalls.Pid != request.session.user_id %}
+                                                <option value="{{ dataPersons.Pid }}">{{ dataPersons.Pname }}</option>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                            </select>
+                    </div>
+                    <div class="col-xl-1">
+                        <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                    </div>
+                    </form>
+                {% endif %}
+                {% if check == 1 %}
+                    <div class="col-xl-3">
+                        <form class="form-horizontal form-bordered" action="{% url 'callqueueck' %}" method="post">
+                            {% csrf_token %}
+                            <select class="form-control"
+                                    name="re_sta" id="staff">
+                                {% for dataPersons in dataPerson %}
+                                    {% for dataOFFalls in dataOFFall %}
+                                        {% if dataPersons.Pid == dataOFFalls.Pid %}
+                                            {% if  dataPersons.Pid == personid %}
+                                                <option value="{{ dataPersons.Pid }}"
+                                                        selected>{{ dataPersons.Pname }}</option>
+                                            {% endif %}
+                                            {% if dataOFFalls.Pid == dataPersons.Pid  and dataPersons.Pid != personid %}
+                                                <option value="{{ dataPersons.Pid }}">{{ dataPersons.Pname }}</option>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                            </select>
+                    </div>
+                    <div class="col-xl-1">
+                        <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                    </div>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+        <br>
+        <div class="col-xl-12">
+            <!-- begin panel -->
+            <div class="panel panel-inverse panel-with-tabs" data-sortable-id="ui-unlimited-tabs-1">
+                <!-- begin panel-heading -->
+                <div class="panel-heading p-0">
+                    <!-- begin nav-tabs -->
+                    <div class="tab-overflow">
+                        <ul class="nav nav-tabs nav-tabs-inverse">
+                            <li class="nav-item"><a href="#nav-tab-1" data-toggle="tab" class="nav-link active">เรียกคิว
+                            </a></li>
+                        </ul>
+                    </div>
+                    <!-- end nav-tabs -->
+                    <div class="panel-heading-btn mr-2 ml-2 d-flex">
+                    </div>
+                </div>
+                <!-- end panel-heading -->
+                <!-- begin tab-content -->
+                <div class="panel-body tab-content ">
+                    <!-- begin tab-pane -->
+                    <div class="tab-pane fade active show" id="nav-tab-1">
+                        <div class="panel panel-inverse" style="background: white">
+                            <!-- begin panel-heading -->
+                            <div class="row col-lg-12" style="margin: auto;text-align: center;height: auto;width: auto">
+                                <div class="col-xl-4 col-sm-4">
+                                    <br>
+                                    <div id="calendarcallqueue" class="calendar scollshow inner-border  height-lg">
+                                    </div>
+                                </div>
+                                <div class="col-xl-8 col-sm-6">
+                                    <br>
+                                    <table width="100%" class="table test-list ">
+                                        <thead style="font-size: 18px">
+                                        <tr class="odd gradeX">
+                                            </th>
+                                            <th class="text-nowrap" style="text-align: left;">ลำดับ</th>
+                                            <th class="text-nowrap" style="text-align: left;">ผู้ป่วย</th>
+                                            <th class="text-nowrap" style="text-align: left;">กิจกรรม</th>
+                                            <th class="text-nowrap" style="text-align: left;"> หมอ/เจ้าหน้าที่</th>
+                                            <th class="text-nowrap" style="text-align: left;"> เรียกคิว</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody style="font-size: 18px;" id="myTablemoniter">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end tab-pane -->
+                    <!-- begin tab-pane -->
+                    <!-- end tab-pane -->
+                </div>
+                <!-- end tab-content -->
+            </div>
+        </div>
+        {% csrf_token %}
+    </div>
+    <script>
+        function toThaiDateStringxxxx(date) {
+            let monthNames = [
+                "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน",
+                "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม.",
+                "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+            ];
+
+            let year = date.getFullYear() + 543;
+            let month = monthNames[date.getMonth()];
+            let numOfDay = date.getDate();
+
+            let hour = date.getHours().toString().padStart(2, "0");
+            let minutes = date.getMinutes().toString().padStart(2, "0");
+            let second = date.getSeconds().toString().padStart(2, "0");
+
+            return `${numOfDay} ${month} ${year} `;
+        }
+
+        $(document).ready(function () {
+            var calendar = $('#calendarcallqueue').fullCalendar({
+                    eventClick: function (info) {
+                        alert('Event: ' + info.event.title);
+                        alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+                        alert('View: ' + info.view.type);
+
+                        // change the border color just for fun
+                        info.el.style.borderColor = 'red';
+                    },
+                    displayEventTime: true,
+                    eventLimit: true,
+                    draggable: true,
+                    defaultView: 'listDay',
+                    locale: 'th',
+                    firstDay: 0,
+                    header: {
+                        left: 'listDay',
+                        center: 'title',
+                        right: 'prev,next',
+                    },
+                    events: [
+                        {% for myresults in bookingshow %}
+                            {
+                                start: '{{ myresults.1 }}T{{ myresults.2}}',
+                                end: '{{ myresults.1 }}T{{ myresults.3 }}',
+                                title: '{{ myresults.5 }} / {{ myresults.4 }}',
+                                color: '{{ myresults.6 }}',
+                                school: '{{ myresults.0 }}',
+                            },
+                        {% endfor %}
+                    ],
+                    eventClick: function (event, jsEvent, view) {
+                        var dateList = event.school
+                        var OFid =
+                        {{OFid}}
+                        var test_list_ids = JSON.stringify(dateList);
+                        $.ajax({
+                            url: "{% url 'filtercallqueue' %}",
+                            type: 'POST',
+                            data: {
+                                'test_list_ids': test_list_ids,
+                                'OFid': OFid,
+                                'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()
+                            },
+                            success: function (data) {
+                                jQuery.each(data.bookingper, function (index, item) {
+                                    var a = item[0];
+                                    if (index == 0) {
+                                        $('.tr-append-add').remove();
+                                    }
+                                    if (item[5] == 1 && item[7] == 0) {
+                                        $('#myTablemoniter').append('<tr class="tr-append-add"> ' +
+                                            '<td style="width: 50px;text-align: left">' +
+                                            '<span>' + item[6] + ' ' +
+                                            '</span>' +
+                                            '</td>' +
+                                            '<td style="width: 285px;text-align: left">' +
+                                            '<span>' + item[3] + ' : ' + item[2] + '' +
+                                            '</span>' +
+                                            '</td>' +
+                                            '<td style="width: 285px;text-align: left">' +
+                                            '<span> ' + item[1] + '' +
+                                            '</span>' +
+                                            '</td>' +
+                                            '<td style="width: 285px;text-align: left;">' +
+                                            '<span>' + item[4] + '' +
+                                            '</span>' +
+                                            '</td>' +
+                                            '<td style="width: 285px;text-align: left;">' +
+                                            '<form action="{% url 'callqueueup' %}" method="POST">{% csrf_token %}' +
+                                            '<input type="hidden" name="id" class="form-control" value=' + item[0] + '>' +
+                                            '<input type="hidden" name="schedule_id" class="form-control" value=' + item[8] + '>' +
+                                            '<input type="submit" class="btn btn-info" value="เรียกคัว">' +
+                                            '</form>' +
+                                            '</td>' +
+                                            '</tr>')
+                                    }
+                                    if (item[5] == 1 && item[7] == 1) {
+                                        $('#myTablemoniter').append('<tr class="tr-append-add"> ' +
+                                            '<td style="width: 50px;text-align: left">' +
+                                            '<span>' + item[6] + ' ' +
+                                            '</span>' +
+                                            '</td>' +
+                                            '<td style="width: 285px;text-align: left">' +
+                                            '<span>' + item[3] + ' : ' + item[2] + '' +
+                                            '</span>' +
+                                            '</td>' +
+                                            '<td style="width: 285px;text-align: left">' +
+                                            '<span> ' + item[1] + '' +
+                                            '</span>' +
+                                            '</td>' +
+                                            '<td style="width: 285px;text-align: left;">' +
+                                            '<span>' + item[4] + '' +
+                                            '</span>' +
+                                            '</td>' +
+                                            '<td style="width: 285px;text-align: left;">' +
+                                            '<label id="' + item[9] + '">' +
+                                            '</label' +
+                                            '</td>' +
+                                            '</tr>')
+                                        var a = item[9];
+                                        var current_datetime = new Date(a);
+                                        console.log(a)
+                                        x=current_datetime.toLocaleString("th-TH", { timeZone: "UTC" })
+                                        document.getElementById(a).innerHTML = toThaiDateStringxxxx(current_datetime) + ""+x[10]+""+x[11]+""+x[12]+""+x[13]+""+x[14]+""+x[15]+""+x[16]+""+x[17];
+                                    }
+                                });
+
+                            }
+                        })
+                    }
+                })
+            ;
+        });
+
+        function checkalltime(source) {
+            var checkboxes = document.querySelectorAll('input[id="checkbox1"]');
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i] != source)
+                    checkboxes[i].checked = source.checked;
+            }
+        }
+
+        $(".btn-noverify").click(function () {
+            var test_list_ids = [];
+            $(".checkbox-timehos:checked").each(function () {
+                test_list_ids.push(this.value);
+            });
+
+            var test_list_ids = JSON.stringify(test_list_ids);
+
+            $.ajax({
+                url: "{% url 'verifydontbooking' %}",
+                type: 'POST',
+                data: {
+                    'test_list_ids': test_list_ids,
+                    'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()
+                },
+            })
+            setTimeout(function () {
+                window.location.reload(true);
+            }, 300);
+        });
+        $(".btn-vertify").click(function () {
+            var test_list_ids = [];
+            $(".checkbox-timehos:checked").each(function () {
+                test_list_ids.push(this.value);
+            });
+            var test_list_ids = JSON.stringify(test_list_ids);
+            $.ajax({
+                url: "{% url 'verifybooking' %}",
+                type: 'POST',
+                data: {
+                    'test_list_ids': test_list_ids,
+                    'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()
+                },
+            })
+            setTimeout(function () {
+                window.location.reload(true);
+            }, 300);
+        });
+    </script>
+{% endblock %}
+

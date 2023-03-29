@@ -1,0 +1,41 @@
+{% extends 'masterbooking.html' %}
+{% block show %}
+    <div class="content" style="font-size: 18px;">
+        <div class="col-xl-12">
+            <div class="panel panel-inverse" data-sortable-id="form-plugins-2">
+                <!-- begin panel-heading -->
+                <!-- end panel-heading -->
+                <!-- begin panel-body -->
+                <div class="panel-body panel-form">
+                    <table class="table">
+                        <form class="form-horizontal form-bordered" action="{% url 'addcount' %}" method="post">
+                            {% csrf_token %}
+                            <thead>
+                            <th>วันที่</th>
+                            <th>เวลา</th>
+                            <th>จำนวนที่รับ</th>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><input type="date" name="datecalendar" class="form-control" required></td>
+                                <td><select class="form-control mb-3" name="timestart">
+                                    <option value="" selected>เวลา</option>
+                                    {% for dataTimes in dataTime %}
+                                        <option value="{{ dataTimes.timestart | date:"H:i" }}-{{ dataTimes.timeend  | date:"H:i" }}">{{ dataTimes.timestart | date:"H:i" }}-{{ dataTimes.timeend  | date:"H:i" }}</option>
+                                    {% endfor %}
+                                </select>
+                                </td>
+                                <td><input name="count" type="text" class="form-control">
+                                    <input name="OFid" type="hidden" value="{{ dataOFF.OFid }}" class="form-control">
+                                </td>
+                            </tbody>
+                        </form>
+                    </table>
+                </div>
+                <!-- end panel-body -->
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary pull-right">บันทึก</button>
+        </div>
+    </div>
+{% endblock %}

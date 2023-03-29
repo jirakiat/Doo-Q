@@ -1,0 +1,809 @@
+{% extends 'masterbooking.html' %}
+{% block show %}
+    <style>
+        .fc-event {
+            text-align: center;
+
+        }
+    </style>
+    <div id="page-loader" class="fade show">
+        <span class="spinner"></span>
+    </div>
+    <!-- end #page-loader -->
+
+    <!-- begin #page-container -->
+    <div id="page-container" class="fade page-sidebar-fixed page-header-fixed">
+    <!-- begin #header -->
+    <div id="header" class="header navbar-default">
+        <!-- begin navbar-header -->
+        <div class="navbar-header">
+            {% if request.session.permission == 1 %}
+                <a href="{% url 'dashboard' %}" class="navbar-brand">
+                <span class="navbar-logo"></span>
+                Doo-Q
+                เจ้าหน้าที่ {{ request.session.name }}
+            {% else %}
+                <a href="{% url 'calendar' %}" class="navbar-brand">
+                <span class="navbar-logo"></span>
+                Doo-Q
+                ผู้ป่วย : {{ request.session.name }}
+            {% endif %}</a>
+            <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <span style="width: 100%;  position: relative;font-size: 18px;left: 35%;padding-top: 0.5%;">หน้ากำหนดช่วงเวลา</span>
+        <!-- end navbar-header --><!-- begin header-nav -->
+        <ul class="navbar-nav navbar-right">
+            <li class="dropdown navbar-user">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    {% if request.session.permission == 1 %}
+                        {% for datahospitals in datahospital %}
+                            {% if dataST.Hid == datahospitals.Hid %}
+                                <span class="d-none d-md-inline" style="font-size: 18px">{{ datahospitals.Hname }} -
+                                    {% for dataDPMs in dataDPM %}
+                                        {% if  dataDPMs.Did == Dids %}
+                                            {{ dataDPMs.Dname }}
+                                        {% endif %}
+                                    {% endfor %}</span>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {% if hospitalname %}
+                            <span class="d-none d-md-inline"
+                                  style="font-size: 18px">{{ hospitalname }} - {{ DPM }} </span>
+                        {% endif %}
+                    {% endif %}
+                    {% if request.session.hn %}
+                        <span class="d-none d-md-inline"
+                              style="font-size: 18px">กำลังใช้บริการ - {{ request.session.hospital }} </span>
+                    {% endif %}
+                </a>
+            </li>
+        </ul>
+        <!-- end header navigation right -->
+    </div>
+    <!-- end #header -->
+
+    <!-- begin #sidebar -->
+    <div id="sidebar" class="sidebar">
+        <!-- begin sidebar scrollbar -->
+        <div data-scrollbar="true" data-height="100%">
+            <!-- begin sidebar user -->
+            <ul class="nav">
+                {% if request.session.permission == 1 %}
+                    <li>
+                        <a href="{% url 'dashboard' %}">
+                            <i class="material-icons">dashboard</i>
+                            <span>dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'callqueue2' %}">
+                            <i class="material-icons">calendar_today</i>
+                            <span>เรียกคิว</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'vtfbooking' %}">
+                            <i class="material-icons">calendar_today</i>
+                            <span>รับคิว</span>
+                        </a>
+                    </li>
+                    <li class="has-sub active">
+                        <a href="{% url 'staff' %}">
+                            <i class="material-icons">local_hospital</i>
+                            <span style="text-align: left">แผนก/กลุ่มงาน</span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li class="has-sub">
+                                <a href="{% url 'sthos' %}">
+                                    <b class="caret"></b>
+                                    <span style="text-align: left">หมอ/เจ้าหน้าที่(ตามสังกัด)</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="sub-menu">
+                            <li class="has-sub">
+                                <a href="{% url 'doctor' %}">
+                                    <b class="caret"></b>
+                                    <span>แผนรับคนไข้</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="sub-menu">
+                            <li class="has-sub">
+                                <a href="{% url 'tagdpm' %}">
+                                    <b class="caret"></b>
+                                    <span style="text-align: left;">เพิ่มแท็กกิจกรรม</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="active" style="background-color: mediumseagreen">
+                        <a href="{% url 'mnbook' %}">
+                            <i class="material-icons">date_range</i>
+                            <span>กำหนดช่วงเวลา</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'staffinfo' %}">
+                            <i class="material-icons">supervised_user_circle</i>
+                            <span>ข้อมูลส่วนตัว</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{% url 'calendar' %}">
+                            <i class="material-icons">calendar_today</i>
+                            <span>จองคิว</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'person' %}">
+                            <i class="material-icons">calendar_today</i>
+                            <span>HN</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'personinfo' %}">
+                            <i class="material-icons">supervised_user_circle</i>
+                            <span>ข้อมูลส่วนตัว</span>
+                        </a>
+                    </li>
+                {% endif %}
+                <li>
+                    <a href="{% url 'dessession' %}" class="btn btn-default">
+                        <i class="material-icons">logout</i>
+                        <span style="color: black;">ออกจากระบบ</span>
+                    </a>
+                </li>
+            </ul>
+            <!-- end sidebar nav -->
+        </div>
+        <!-- end sidebar scrollbar -->
+    </div>
+    <div class="sidebar-bg"></div>
+    <div class="content datetime" style="font-size: 18px;">
+    <div class="col-xl-12">
+    <!-- begin panel -->
+
+    <input type="checkbox" class="checkbox-multiselect-date" id="checkboxdate" hidden>
+    <div class="panel panel-inverse panel-with-tabs" data-sortable-id="ui-unlimited-tabs-1">
+        <!-- begin panel-heading -->
+        <div class="panel-heading p-0">
+            <!-- begin nav-tabs -->
+            <div class="tab-overflow">
+                <ul class="nav nav-tabs nav-tabs-inverse">
+                    <li class="nav-item"><a href="#nav-tab-1" data-toggle="tab" class="nav-link active">กำหนดช่วงเวลา
+                    </a></li>
+                </ul>
+            </div>
+            <!-- end nav-tabs -->
+            <div class="panel-heading-btn mr-2 ml-2 d-flex">
+            </div>
+        </div>
+        <!-- end panel-heading -->
+        <!-- begin tab-content -->
+        <div class="panel-body tab-content ">
+            <!-- begin tab-pane -->
+            <div class="tab-pane fade active show" id="nav-tab-1">
+                <div class="panel panel-inverse" style="background: white">
+                    <!-- begin panel-heading -->
+                    <div class="row col-lg-12"
+                         style="margin: auto;text-align: center;height: auto;width: auto">
+                        <div class="col-xl-6 col-sm-6" style="height: 100%;">
+                            <br>
+                            <div id="calendarmanagebook" class="calendar scollshow inner-border  height-lg"
+                                 style="height: 350px;width: 100%">
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-sm-6">
+                            <br>
+                            <form class="form-horizontal form-bordered" action="{% url 'addtime' %}"
+                                  method="post" id="addtime">
+                                {% csrf_token %}
+                                <div class="card card-forum mb-3">
+                                    <!-- begin card-header -->
+                                    <div class="card-header f-w-600">
+                                    </div>
+                                    <br>
+                                    <!-- end card-header -->
+                                    <!-- begin forum-list -->
+                                    <ul class="forum-list">
+                                        <table width="100%" class="table test-list" id="myTable">
+                                            <thead style="font-size: 18px;">
+                                            <tr>
+                                                <th colspan="3" style="text-align: center"><span
+                                                        id="testtext"><span>{{ D }} {{ M }} {{ Year }}</span></span>
+                                                </th>
+                                            </tr>
+                                            <tr class="odd gradeX">
+                                                <th class="text-nowrap"><input type="checkbox" class="check1"
+                                                                               onclick="checkalltime(this);"></th>
+                                                <th class="text-nowrap">เวลาเริ่มต้น</th>
+                                                <th class="text-nowrap">เวลาสิ้นสุด</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody style="font-size: 18px;" id="myTable2">
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td>
+
+                                                </td>
+                                                <td>
+                                                    <input type="hidden" class="input-hidden-memory-date"
+                                                           name="datetest" value="">
+                                                    {#                                                        <input type="hidden" id="testday" name="datetest" value="">#}
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group">
+                                                            <input type='text' autocomplete='off' name="timestart"
+                                                                   class="form-control"
+                                                                   id='datetimepicker1'/>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group">
+                                                            <input type='text' autocomplete='off' name="timeend"
+                                                                   class="form-control"
+                                                                   id='datetimepicker2'/>
+                                                        </div>
+                                                    </div>
+                                                    <input type="hidden" value="{{ dataST.Hid }}"
+                                                           name="Hid">
+                                                    <input type="hidden" value="{{ Dids }}" name="Did">
+
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                        <div class="float-right m-r-20">
+                                            <a href="#" class="btn btn-outline-dark" onclick="add_row()"><i
+                                                    class="fa fa-plus"></i></a>
+                                        </div>
+                                        <!-- end info-container -->
+                                        </li>
+                                    </ul>
+                                    <!-- end forum-list -->
+                                </div>
+
+                                <div class="float-right">
+                                    <a href="#modal-dialog" class="btn btn-warning  width-80 "
+                                       data-toggle="modal">ทำซ้ำ</a>
+                                    <a href="#modal-alert" class="btn btn-danger  width-80 "
+                                       data-toggle="modal">ลบ</a>
+                                    <button type="submit" class="btn btn-primary width-80 submit-time" id="SSXS">
+                                        บันทึก
+                                    </button>
+                                </div>
+                            </form>
+                            <br>
+                            <br>
+                            {% if request.session.error2  == 1 %}
+                                <p>
+                                <div class="alert alert-danger fade show">
+                                    <span class="close" data-dismiss="alert">×</span>
+                                    <strong>กำหนดช่วงเวลาไม่สำเร็จ</strong>
+                                    กรุณาเลือกวันที่
+                                </div>
+                                </p>
+                            {% endif %}
+                            {% if request.session.error2  == 2 %}
+                                <p>
+                                <div class="alert alert-danger fade show">
+                                    <span class="close" data-dismiss="alert">×</span>
+                                    <strong>กำหนดช่วงเวลาไม่สำเร็จ</strong>
+                                    กรุณากรอกข้อมูลเวลาเริ่มต้น - เวลาสิ้นสุดให้ครบ
+                                </div>
+                                </p>
+                            {% endif %}
+                            {% if request.session.error2  == 3 %}
+                                <p>
+                                <div class="alert alert-danger fade show">
+                                    <span class="close" data-dismiss="alert">×</span>
+                                    <strong>บันทึกสำเสร็จ</strong>
+                                </div>
+                                </p>
+                            {% endif %}
+                        </div>
+                        <br><br>
+                        <div class="col-xl-12" id="div-timehos">
+                            <div class="panel panel-inverse" data-sortable-id="form-plugins-2">
+                                <!-- begin panel-heading -->
+                                <!-- end panel-heading -->
+                                <!-- begin panel-body -->
+                                <div class="panel-body panel-form">
+
+                                </div>
+                                <!-- end panel-body -->
+                            </div>
+                        </div>
+                        <div class="modal fade" id="modal-dialog">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <div style="text-align: center">ทำซ้ำวันที่ <span
+                                                id="daycustom"><span>{{ D }} {{ M }} {{ Year }}</span></span></div>
+                                    </div>
+                                    <form class="form-horizontal form-bordered"
+                                          action="{% url 'replazex' %}"
+                                          method="post" id="bookingeventan">
+                                        {% csrf_token %}
+                                        <div class="modal-body">
+                                            <div class="col-lg-12" style="text-align: left">
+                                                <div class="form-group row" style="text-align: left">
+                                                    <label class="col-lg-4 col-form-label">วัน</label>
+                                                    <input type="hidden" name="datecustome" id="datechss" value="{{ d1 }}">
+                                                    <div class="col-lg-8">
+                                                        <div class="" style="display: inline-block"><input name="date1"
+                                                                                                           value="Mon"
+                                                                                                           type="checkbox">
+                                                            จันทร์
+                                                        </div>
+                                                        <div class="" style="display: inline-block"><input name="date2"
+                                                                                                           value="Tue"
+                                                                                                           type="checkbox">
+                                                            อังคาร
+                                                        </div>
+                                                        <div class="" style="display: inline-block"><input name="date3"
+                                                                                                           value="Wed"
+                                                                                                           type="checkbox">
+                                                            พุธ
+                                                        </div>
+                                                        <div class="" style="display: inline-block"><input name="date4"
+                                                                                                           value="Thu"
+                                                                                                           type="checkbox">
+                                                            พฤหัส
+                                                        </div>
+                                                        <div class="" style="display: inline-block"><input name="date5"
+                                                                                                           value="Fri"
+                                                                                                           type="checkbox">
+                                                            ศุกร์
+                                                        </div>
+                                                        <div class="" style="display: inline-block"><input name="date6"
+                                                                                                           value="Sat"
+                                                                                                           type="checkbox">
+                                                            เสาร์
+                                                        </div>
+                                                        <div class="" style="display: inline-block"><input name="date7"
+                                                                                                           value="Sun"
+                                                                                                           type="checkbox">
+                                                            อาทิตย์
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-lg-4 col-form-label">วันเริ่มต้น</label>
+                                                    <div class="col-lg-8">
+                                                        <div class="input-group date">
+                                                            <input type="date" name="start" class="form-control"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-lg-4 col-form-label">วันสิ้นสุด</label>
+                                                    <div class="col-lg-8">
+                                                        <div class="input-group date">
+                                                            <input type="date" name="end" class="form-control"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a href="javascript:;" class="btn btn-danger" data-dismiss="modal">Close</a>
+                                            <button class="btn btn-primary" type="submit">บันทึก</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="modal-alert">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">ยืนยันการลบ</h4>
+                                        <button type="button" class="close" data-dismiss="modal"
+                                                aria-hidden="true">×
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="alert alert-danger m-b-0">
+                                            <h5><i class="fa fa-info-circle"></i> ท่านแน่ใจว่าจะลบ
+                                                ช่วงเวลา</h5>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="javascript:;" class="btn btn-danger width-80 "
+                                           data-dismiss="modal">ยกเลิก</a>
+                                        <button class="btn btn-primary width-80 btn-deletetimehos"
+                                                style="color: white">ลบ
+                                        </button> &nbsp;
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end tab-pane -->
+                <!-- begin tab-pane -->
+                <!-- end tab-pane -->
+            </div>
+            <!-- end tab-content -->
+            {% csrf_token %}
+
+        </div>
+    </div>
+    <script>
+        var dateList = '';
+        var arr = [];
+        var dayclick = [];
+        var check = '';
+        var datechecks = 0;
+        var sds = '';
+        dayone = "{{ d1 }}";
+
+        $.ajax({
+            url: "{% url 'getdatevalue' %}",
+            type: 'POST',
+            data: {
+                'dateList': dayone,
+                'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()
+            },
+            success: function (data) {
+                if (sds != dayone) {
+                    datechecks = 0
+                }
+                if (data.timelist.length > 0) {
+                    jQuery.each(data.listime2, function (index2, item2) {
+                        if (dayone == item2) {
+                            datechecks = 1
+                            sds = dateList;
+                        }
+                    });
+                    if (datechecks == 1) {
+                        jQuery.each(data.timelist, function (index, item) {
+                            if (index == 0) {
+                                $('.tr-append-add').remove();
+                            }
+                            $('#myTable2').append('<tr class="tr-append-add"> ' +
+                                '<td>' +
+                                '<input type="checkbox" id="checkbox1" name="test" class="checkbox-hospitaltime-id checkbox-timehos check1" value="' + item[0] + '" disabled>' +
+                                '</td>' +
+                                '<td>' +
+                                '<div class="col-lg-12">' +
+                                '<div class="form-group">' +
+                                '<input type="text"class="form-control" value="' + item[1] + '" disabled>' +
+                                '</div>' +
+                                '</div>' +
+                                '</td>' +
+                                '<td>' +
+                                '<div class="col-lg-12">' +
+                                '<div class="form-group">' +
+                                '<input type="text"   class="form-control" value="' + item[2] + '" disabled>' +
+                                '</div>' +
+                                '</div>' +
+                                '</td>' +
+                                '</tr>');
+                            $("#datetimepicker1" + item[0]).datetimepicker({
+                                format: 'HH:mm'
+                            });
+
+                            $("#datetimepicker2" + item[0]).datetimepicker({
+                                format: 'HH:mm'
+                            });
+                        });
+                    } else {
+                        jQuery.each(data.timelist, function (index, item) {
+                            if (index == 0) {
+                                $('.tr-append-add').remove();
+                            }
+                            $('#myTable2').append('<tr class="tr-append-add"> ' +
+                                '<td>' +
+                                '<input type="checkbox" id="checkbox1" name="test" class="checkbox-hospitaltime-id checkbox-timehos check1" value="' + item[0] + '">' +
+                                '</td>' +
+                                '<td>' +
+                                '<div class="col-lg-12">' +
+                                '<div class="form-group">' +
+                                '<input type="text" autocapitalize="off" id="datetimepicker1' + item[0] + '" name="timestartx' + item[0] + '"class="form-control" value="' + item[1] + '" >' +
+                                '</div>' +
+                                '</div>' +
+                                '</td>' +
+                                '<td>' +
+                                '<div class="col-lg-12">' +
+                                '<div class="form-group">' +
+                                '<input type="text"  autocapitalize="off" id="datetimepicker2' + item[0] + '" name="timeendx' + item[0] + '" class="form-control" value="' + item[2] + '" >' +
+                                '</div>' +
+                                '</div>' +
+                                '</td>' +
+                                '</tr>');
+                            $("#datetimepicker1" + item[0]).datetimepicker({
+                                format: 'HH:mm'
+                            });
+
+                            $("#datetimepicker2" + item[0]).datetimepicker({
+                                format: 'HH:mm'
+                            });
+                        });
+                    }
+                } else {
+                    $('input[name="timestart"]').val('');
+                    $('input[name="timeend"]').val('');
+                    $('.tr-append-add').remove();
+                }
+                $('.input-hidden-memory-date').val(dayone);
+                $('.fc-day[data-date=' + dayone + ']').css('background-color', '#158900');
+            },
+        })
+        $(document).ready(function () {
+            var calendar = $('#calendarmanagebook').fullCalendar({
+                    eventClick: function (info) {
+                        alert('Event: ' + info.event.title);
+                        alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+                        alert('View: ' + info.view.type);
+
+                        // change the border color just for fun
+                        info.el.style.borderColor = 'red';
+                    },
+                    dayClick: function (date, jsEvent, view) {
+                        var d = new Date(date.format());
+                        document.getElementById('testtext').innerHTML = toThaiDateString(d);
+                        document.getElementById('daycustom').innerHTML = toThaiDateString(d);
+                        var z = new Date().toISOString().split('T')[0];
+                        check = 0
+                        {% for myresults in listday %}
+                            if ("{{ myresults | date:"Y-m-d" }}" == date.format()) {
+                                check = 1
+                            }
+                        {% endfor %}
+                        if (check != 1) {
+                            if (date.format() >= z) {
+                                if ($('input.checkbox-multiselect-date').is(':checked')) {
+                                    var memDateList = $('.input-hidden-memory-date').val();
+                                    memDateList = (memDateList.length > 0) ? memDateList + ',' : '';
+                                    dateList = memDateList + date.format();
+                                } else {
+                                    $(this).parents().parents().parents().parents().parents().parents().find('td').css('background-color', '');
+                                    dateList = date.format();
+                                    //show time
+                                    var test_list_ids = JSON.stringify(test_list_ids);
+                                      document.getElementById('datechss').value = date.format();
+                                    $.ajax({
+                                        url: "{% url 'getdatevalue' %}",
+                                        type: 'POST',
+                                        data: {
+                                            'dateList': dateList,
+                                            'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()
+                                        },
+                                        success: function (data) {
+                                            if (sds != date.format()) {
+                                                datechecks = 0
+                                            }
+                                            if (data.timelist.length > 0) {
+                                                jQuery.each(data.listime2, function (index2, item2) {
+                                                    if (date.format() == item2) {
+                                                        datechecks = 1
+                                                        sds = date.format();
+                                                    }
+                                                });
+                                                if (datechecks == 1) {
+                                                    jQuery.each(data.timelist, function (index, item) {
+                                                        if (index == 0) {
+                                                            $('.tr-append-add').remove();
+                                                        }
+                                                        $('#myTable2').append('<tr class="tr-append-add"> ' +
+                                                            '<td>' +
+                                                            '<input type="checkbox" id="checkbox1" name="test" class="checkbox-hospitaltime-id checkbox-timehos check1" value="' + item[0] + '" disabled>' +
+                                                            '</td>' +
+                                                            '<td>' +
+                                                            '<div class="col-lg-12">' +
+                                                            '<div class="form-group">' +
+                                                            '<input type="text"class="form-control" value="' + item[1] + '" disabled>' +
+                                                            '</div>' +
+                                                            '</div>' +
+                                                            '</td>' +
+                                                            '<td>' +
+                                                            '<div class="col-lg-12">' +
+                                                            '<div class="form-group">' +
+                                                            '<input type="text"   class="form-control" value="' + item[2] + '" disabled>' +
+                                                            '</div>' +
+                                                            '</div>' +
+                                                            '</td>' +
+                                                            '</tr>');
+                                                        $("#datetimepicker1" + item[0]).datetimepicker({
+                                                            format: 'HH:mm'
+                                                        });
+
+                                                        $("#datetimepicker2" + item[0]).datetimepicker({
+                                                            format: 'HH:mm'
+                                                        });
+                                                    });
+                                                } else {
+                                                    jQuery.each(data.timelist, function (index, item) {
+                                                        if (index == 0) {
+                                                            $('.tr-append-add').remove();
+                                                        }
+                                                        $('#myTable2').append('<tr class="tr-append-add"> ' +
+                                                            '<td>' +
+                                                            '<input type="checkbox" id="checkbox1" name="test" class="checkbox-hospitaltime-id checkbox-timehos check1" value="' + item[0] + '">' +
+                                                            '</td>' +
+                                                            '<td>' +
+                                                            '<div class="col-lg-12">' +
+                                                            '<div class="form-group">' +
+                                                            '<input type="text" autocapitalize="off" id="datetimepicker1' + item[0] + '" name="timestartx' + item[0] + '"class="form-control" value="' + item[1] + '" >' +
+                                                            '</div>' +
+                                                            '</div>' +
+                                                            '</td>' +
+                                                            '<td>' +
+                                                            '<div class="col-lg-12">' +
+                                                            '<div class="form-group">' +
+                                                            '<input type="text"  autocapitalize="off" id="datetimepicker2' + item[0] + '" name="timeendx' + item[0] + '" class="form-control" value="' + item[2] + '" >' +
+                                                            '</div>' +
+                                                            '</div>' +
+                                                            '</td>' +
+                                                            '</tr>');
+                                                        $("#datetimepicker1" + item[0]).datetimepicker({
+                                                            format: 'HH:mm'
+                                                        });
+
+                                                        $("#datetimepicker2" + item[0]).datetimepicker({
+                                                            format: 'HH:mm'
+                                                        });
+                                                    });
+                                                }
+                                            } else {
+                                                $('input[name="timestart"]').val('');
+                                                $('input[name="timeend"]').val('');
+                                                $('.tr-append-add').remove();
+                                            }
+                                        },
+                                    })
+
+                                }
+
+                                $('.input-hidden-memory-date').val(dateList);
+                                $(this).css('background-color', '#158900');
+
+
+                            }
+                        }
+                    },
+                    eventRender: function (event, element) {
+                        if (event.icon == null) {
+                            event.icon = '';
+                        }
+                        element.find('.fc-title').append(" " + event.icon);
+                        element.find('.fc-list-item-title').append(" " + event.icon);
+                    }
+                    ,
+                    displayEventTime: false,
+                    eventLimit: true,
+                    draggable: false, defaultView: 'month',
+                    locale: 'th',
+                    firstDay: 0,
+                    header: {left: 'month', center: 'title', right: 'prev,next',},
+                    events: [
+                        {% for myresults in lisday3 %}
+                            {
+                                title: "กำหนดเวลา",
+                                start: '{{ myresults }}',
+                                end: '{{ myresults}}',
+                                color: 'mediumseagreen',
+                            },
+                        {% endfor %}
+                        {% for myresults in listday %}
+                            {
+                                title: "มีการลงคิว",
+                                start: '{{ myresults }}',
+                                end: '{{ myresults}}',
+                                color: 'red',
+                            },
+                        {% endfor %}
+                    ]
+                })
+            ;
+        })
+        ;
+
+        function add_row() {
+            var table = document.getElementById("myTable");
+            count_rows = table.getElementsByTagName("tr").length;
+
+            var row = table.insertRow(count_rows);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+
+            cell1.innerHTML = " ";
+            cell2.innerHTML = "<div class='col-lg-12'> <div class='form-group'> <input autocomplete='off' type='text' name='timestart" + count_rows + "' class='form-control' id='datetimepicker1" + count_rows + "'/> </div> </div>";
+            cell3.innerHTML = "<div class='col-lg-12'> <div class='form-group'> <input autocomplete='off' type='text' name='timeend" + count_rows + "' class='form-control' id='datetimepicker2" + count_rows + "'/> </div> </div>";
+            $("#datetimepicker1" + count_rows).datetimepicker({
+                format: 'HH:mm'
+            });
+
+            $("#datetimepicker2" + count_rows).datetimepicker({
+                format: 'HH:mm'
+            });
+            var elc = document.getElementById("deltr");
+            elc.removeAttribute("hidden");
+        }
+
+        function del_row() {
+            var table = document.getElementById("myTable");
+            count_rows = table.getElementsByTagName("tr").length;
+
+            document.getElementById("myTable").deleteRow(count_rows - 1);
+            if (count_rows == 3) {
+                var elc = document.getElementById("deltr");
+                elc.setAttribute("hidden", true);
+            }
+        }
+
+        document.onkeydown = function (evt) {
+            evt = evt || window.event;
+
+            if (evt.keyCode != 16) {
+                document.getElementById("checkboxdate").checked = false;
+            }
+            if (evt.keyCode == 16) {
+                document.getElementById("checkboxdate").checked = true;
+            }
+        };
+        $(document).ready(function () {
+
+            $("body").keydown(function () {
+
+                document.getElementById("checkboxdate").checked = true;
+            });
+            $("body").keyup(function () {
+                document.getElementById("checkboxdate").checked = false;
+            });
+        });
+
+        $(function () {
+            $('#datetimepicker1').datetimepicker({
+                format: 'HH:mm'
+            });
+
+            $('#datetimepicker2').datetimepicker({
+                format: 'HH:mm'
+            });
+        });
+        checkalltime
+
+        function checkalltime(source) {
+            var checkboxes = document.querySelectorAll('input[id="checkbox1"]');
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i] != source)
+                    checkboxes[i].checked = source.checked;
+            }
+        }
+
+        $(".btn-deletetimehos").click(function () {
+            var test_list_ids = [];
+            $(".checkbox-timehos:checked").each(function () {
+                test_list_ids.push(this.value);
+            });
+
+            var test_list_ids = JSON.stringify(test_list_ids);
+
+            $.ajax({
+                url: "{% url 'deletetimehos' %}",
+                type: 'POST',
+                data: {
+                    'test_list_ids': test_list_ids,
+                    'dateList': dateList,
+                    'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()
+                },
+            })
+            setTimeout(function () {
+                window.location.reload(true);
+            }, 300);
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link href="{% static 'doqs/assets/css/apple/app.min.css' %}" rel="stylesheet"/>
+    <!-- ================== END BASE CSS STYLE ================== -->
+
+    <!-- ================== BEGIN PAGE LEVEL CSS STYLE ================== -->
+    <link href="{% static 'doqs/assets/plugins/jvectormap-next/jquery-jvectormap.css' %}" rel="stylesheet"/>
+    <link href="{% static 'doqs/assets/plugins/bootstrap-calendar/css/bootstrap_calendar.css' %}" rel="stylesheet"/>
+    <link href="{% static 'doqs/assets/plugins/gritter/css/jquery.gritter.css' %}" rel="stylesheet"/>
+    <link href="{% static 'doqs/assets/plugins/nvd3/build/nv.d3.css' %}" rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+    <script src="https://fullcalendar.io/js/fullcalendar-2.3.1/fullcalendar.min.js"></script>
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@3.10.2/dist/fullcalendar.min.css' rel='stylesheet'/>
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@3.10.2/dist/fullcalendar.print.css' rel='stylesheet'
+          media='print'/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js'></script>
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        table.history {
+            font-size: 18px;
+        }
+
+        input::-webkit-input-placeholder {
+            font-size: 14px;
+        }
+
+        .modalcenter {
+            top: 20%;
+        }
+
+        .scollshow {
+            height: auto;
+        }
+
+        .inner-border::-webkit-scrollbar {
+            display: none;
+        }
+
+        .check1 {
+            transform: scale(1.9);
+        }
+
+        .fc-event {
+            cursor: pointer;
+            position: initial;
+            height: 700px;
+            text-align: center;
+            margin: auto;
+        }
+
+        .fc-list-item {
+            cursor: pointer;
+        }
+
+        .fc .fc-view-container .fc-body .fc-bg td.fc-today {
+            background: #fffadb;
+        }
+
+        .show1 {
+            position: absolute;
+            display: block;
+            width: 100%;
+            color: black;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>Doo-Q</title>
+</head>
+<body>
+<div class="content-inverse-mode" style="background-color: white;height: 100%" id="content">
+    <div style="background-color: white;width: 100%">
+        <a href="{% url "indexan" %}" class="btn btn-default w-100"><i
+                class="ion ion-md-arrow-back fa-3x fa-fw pull-left  text-black-lighter" style="font-size: 48px;"></i><i
+                class="ion ion-md-home fa-3x fa-fw pull-right"
+                style="font-size: 48px;"></i>
+            <p style="font-size: 32px;text-align: center">{% if  request.session.hn %}
+                กำลังเลือกใช้บริการ : {{ request.session.hospital }} </p>
+            {% endif %}
+        </a>
+    </div>
+    <br>
+    <form class="form-horizontal form-bordered" action="{% url 'addhnan' %}" method="post">
+        {% csrf_token %}
+        <table width="100%" id="myTableHN"
+               class="table test-list">
+            <tbody style="font-size: 35px;">
+            {% for HNS in HN %}
+                {% for hospitals in hospital %}
+                    {% if HNS.HNhid == hospitals.Hid %}
+                        <tr class="odd gradeX">
+                            <td>
+                                <input id="inputDatabaseName{{ HNS.id }}" type="text" class="form-control"
+                                       name="HN{{ hospitals.Hid }}"
+                                       value="{{ HNS.HN }}" required style="height: 60px;font-size: 28px;">
+                                <input type="hidden" class="form-control" name="HNid{{ hospitals.Hid }}"
+                                       value="{{ HNS.id }}">
+                            </td>
+
+                            <td></td>
+                            <td>{{ hospitals.Hname }} </td>
+                            {% if request.session.hn == HNS.HN %}
+                                <td style="text-align: right">
+                                    <a href="{% url 'settingHNwebx' HNS.id %}" class="btn btn-success height-50" style="font-size: 18px;">เลือกใช้บริการ</a>
+                                </td>
+                            {% else %}
+                                <td style="text-align: right">
+                                    <a href="{% url 'settingHNwebx' HNS.id %}" class="btn btn-default  height-50" style="font-size: 18px;">เลือกใช้บริการ</a>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+            {% for hospitaledit in hospitaledit %}
+                <tr class="odd gradeX">
+                    <td>
+                        <input id="inputDatabaseName" type="text" class="form-control"
+                               name="HNnew{{ hospitaledit.0 }}"
+                               value="">
+                    </td>
+                    <td></td>
+                    <td>{{ hospitaledit.1 }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- end info-container -->
+        </li>
+        </ul>
+        <!-- end forum-list -->
+</div>
+<div class="col-xl-12 fixed-bottom" id="showbtns"
+     style="background-color: black;height: 350px;">
+    <div style="color: white;text-align: center;font-size: 48px;">
+        <p style="margin-top: 3%">คุณต้องการบันทึก
+            <br>
+            <input type="button" style="font-size: 24px;" onclick="resetxxy()"
+                   class="btn btn-danger width-150  height-100 m-r-10"
+                   value="ยกเลิก">
+            <button type="submit"
+                    class="btn btn-primary width-150  height-100" style="font-size: 30px;">บันทึก
+            </button> &nbsp;
+
+        </p>
+    </div>
+</div>
+</form>
+</div>
+
+</div>
+</body>
+<script src="{% static 'doqs/assets/js/app.min.js' %}"></script>
+<script src="{% static 'doqs/assets/js/theme/apple.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/d3/d3.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/nvd3/build/nv.d3.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-calendar/js/bootstrap_calendar.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/jquery-migrate/dist/jquery-migrate.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/moment/min/moment.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/ion-rangeslider/js/ion.rangeSlider.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/jquery.maskedinput/src/jquery.maskedinput.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/pwstrength-bootstrap/dist/pwstrength-bootstrap.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/@danielfarrell/bootstrap-combobox/js/bootstrap-combobox.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/tag-it/js/tag-it.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-daterangepicker/daterangepicker.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/select2/dist/js/select2.min.js' %}"></script>
+<script src="{% static 'doqs/assets/js/demo/table-manage-responsive.demo.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/d3/d3.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-show-password/dist/bootstrap-show-password.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-colorpalette/js/bootstrap-colorpalette.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/jquery-simplecolorpicker/jquery.simplecolorpicker.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/clipboard/dist/clipboard.min.js' %}"></script>
+<script src="{% static 'doqs/assets/js/demo/form-plugins.demo.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/fullcalendar/dist/fullcalendar.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/fullcalendar/dist/locale/th.js' %}"></script>
+<link href="{% static 'doqs/assets/plugins/ionicons/css/ionicons.min.css' %}" rel="stylesheet"/>
+<script>
+    $('#showbtns').hide();
+     function resetxxy(){
+          $('#showbtns').hide();
+    }
+    {% for HNS in HN %}
+        $('input#inputDatabaseName{{ HNS.id }}').keydown(function (e) {
+            if (e.keyCode == 32) {
+                return false;
+            }
+        });
+
+        $(document).ready(function () {
+            $('#inputDatabaseName{{ HNS.id }}').keyup(function () {
+                var inputVal{{ HNS.id }} = document.getElementById("inputDatabaseName{{ HNS.id }}").value;
+                if (inputVal{{ HNS.id }} == {{ HNS.HN }}) {
+                    console.log(inputVal{{ HNS.id }});
+                } else {
+                    $('#showbtns').show();
+                }
+            });
+        });
+    {% endfor %}
+    $(document).ready(function () {
+        $('#inputDatabaseName').keyup(function () {
+            $('#showbtns').show();
+        });
+    });
+
+</script>
+</html>

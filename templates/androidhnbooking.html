@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+
+
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link href="{% static 'doqs/assets/css/apple/app.min.css' %}" rel="stylesheet"/>
+    <!-- ================== END BASE CSS STYLE ================== -->
+
+    <!-- ================== BEGIN PAGE LEVEL CSS STYLE ================== -->
+    <link href="{% static 'doqs/assets/plugins/jvectormap-next/jquery-jvectormap.css' %}" rel="stylesheet"/>
+    <link href="{% static 'doqs/assets/plugins/bootstrap-calendar/css/bootstrap_calendar.css' %}" rel="stylesheet"/>
+    <link href="{% static 'doqs/assets/plugins/gritter/css/jquery.gritter.css' %}" rel="stylesheet"/>
+    <link href="{% static 'doqs/assets/plugins/nvd3/build/nv.d3.css' %}" rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+    <script src="https://fullcalendar.io/js/fullcalendar-2.3.1/fullcalendar.min.js"></script>
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@3.10.2/dist/fullcalendar.min.css' rel='stylesheet'/>
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@3.10.2/dist/fullcalendar.print.css' rel='stylesheet'
+          media='print'/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js'></script>
+
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        table.history {
+            font-size: 18px;
+        }
+
+        input::-webkit-input-placeholder {
+            font-size: 14px;
+        }
+
+        .modalcenter {
+            top: 40%;
+        }
+
+        .scollshow {
+            height: auto;
+        }
+
+        .inner-border::-webkit-scrollbar {
+            display: none;
+        }
+
+        .check1 {
+            transform: scale(1.9);
+        }
+
+        .fc-event {
+            cursor: pointer;
+            position: initial;
+            height: 700px;
+            text-align: center;
+            margin: auto;
+        }
+
+        .fc-list-item {
+            cursor: pointer;
+        }
+
+        .fc .fc-view-container .fc-body .fc-bg td.fc-today {
+            background: #fffadb;
+        }
+
+        .show1 {
+            position: absolute;
+            display: block;
+            width: 100%;
+            color: black;
+        }
+
+        .my-custom-scrollbar {
+            position: relative;
+            height: 500px;
+            overflow: auto;
+        }
+
+        .table-wrapper-scroll-y {
+            display: block;
+        }
+
+        .fc .fc-toolbar.fc-header-toolbar h2 {
+            font-size: 35px;
+            line-height: 30px;
+            margin-bottom: 10px;
+        }
+
+        .textarea {
+            font-size: 30px;
+        }
+
+        .tableFixHead {
+            overflow: auto;
+            height: 20px;
+        }
+
+        .tableFixHead thead th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        /* Just common table stuff. Really. */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 8px 16px;
+        }
+
+        th {
+            background: seagreen;
+        }
+
+    </style>
+    <meta charset="UTF-8">
+    <title>Doo-Q</title>
+</head>
+<body>
+<div class="content-inverse-mode" style="background-color: white;height: 100%" id="content">
+    <div style="background-color: white;width: 100%">
+        <a href="{% url 'indexan' %}" class="btn btn-default w-100"><i
+                class="ion ion-md-arrow-back fa-3x fa-fw pull-left  text-black-lighter" style="font-size: 48px;"></i><i
+                class="ion ion-md-home fa-3x fa-fw pull-right"
+                style="font-size: 48px;"></i>
+            <p style="font-size: 32px;text-align: center">{% if  request.session.hn %}
+                กำลังเลือกใช้บริการ : {{ request.session.hospital }} </p>
+            {% endif %}
+        </a>
+    </div>
+    <div class="col-xl-12 col-md-12 col-sm-12">
+        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="0">
+            <div class="carousel-inner">
+                <div class="carousel-item active" style="height: 1200px">
+                    <div id="color1" style="background-color: mediumseagreen;width: 100%;height: 180px">
+                        <p style="text-align: center;font-size: 48px;color: white;padding-top: 60px;">วันที่
+                            &nbsp;<label id="textdate"></label></p>
+                    </div>
+                    <div id="color11" style="background-color: seagreen;width: 100%;height: 80px">
+                        <p style="text-align: center;font-size: 38px;color: white;">จำนวนคิว <label
+                                id="textqueue1">0</label>/<label id="textqueue11">0</label></p>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div id="calendarperson" class="calendar scollshow inner-border  height-lg"
+                                 style="height: 450px;width: 100%;font-size: 30px;">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item" style="height: 1200px">
+                    <div id="color2" style="background-color: mediumseagreen;width: 100%;height: 180px">
+                        <p style="text-align: center;font-size: 48px;color: white;padding-top: 60px;">วันที่
+                            &nbsp;<label id="textdate2"></label></p>
+                    </div>
+                    <div id="color21" style="background-color: seagreen;width: 100%;height: 80px">
+                        <p style="text-align: center;font-size: 38px;color: white;">จำนวนคิว <label
+                                id="textqueue2">0</label>/<label id="textqueue21">0</label></p>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <select class="required" id="department"
+                                style="height: 50px;font-size: 35px;width: 400px;margin-left: 50px;"
+                                required>
+                            <option value="" selected>แผนก</option>
+                            {% for dataDPMes in dataDPM %}
+                                <option value="{{ dataDPMes.Did }}">{{ dataDPMes.Dname }}</option>
+                            {% endfor %}
+                        </select>
+                        <select class="required" id="staff"
+                                style="height: 50px;font-size: 35px;margin-left: 50px;width: 400px;"
+                                required>
+                            <option value="" selected>แพทย์/เจ้าหน้าที่</option>
+
+                        </select>
+                    </div>
+                    <br> <br>
+                    <form class="form-horizontal form-bordered"
+                          action="{% url 'bookingeventan' %}"
+                          method="post" id="bookingeventan">
+                        {% csrf_token %}
+                        <div class="col-lg-12" style="font-size: 40px;">
+                            <div class="table-wrapper-scroll-y my-custom-scrollbar">
+
+                                <table class="table table-bordered table-striped mb-0 testshow tableFixHead" id="test">
+                                    <thead style="background-color:seagreen;color: white ">
+                                    <tr>
+                                        <th scope="col">แพทย์/เจ้าหน้าที่</th>
+                                        <th scope="col">เวลา</th>
+                                        <th scope="col">ที่ว่าง</th>
+                                        <th scope="col">จอง</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                        <br>
+                        <div class="col-lg-12" style="width: 100%">
+                            <p style="text-align: left;font-size: 48px;">กิจกรรม<small style="font-size: 30px;">(หมายเหตุ
+                                : กรุณากรอกกิจกรรมของท่านก่อนจอง)</small></p>
+                            <textarea class="form-control" id="event" name="eventes"
+                                      style="height: 200px;border:outset 1px black;font-size: 38pt"></textarea>
+                        </div>
+
+                </div>
+                <div class="col-xl-12 fixed-bottom" id="showbtns"
+                                                     style="background-color: black;height: 350px;">
+                                                    <div style="color: white;text-align: center;font-size: 48px;">
+                                                        <p style="margin-top: 3%">คุณต้องการจองคิวไหม
+                                                            <br>
+                                                            <input type="button" onclick="resetxxx()" style="font-size: 24px;"
+                                                                   class="btn btn-danger width-150  height-100 m-r-10"
+                                                                   value="ยกเลิก">
+                                                             <button type="submit"
+                                                                    class="btn btn-primary width-150  height-100" style="font-size: 30px;">จอง
+                                                            </button> &nbsp;
+
+                                                        </p>
+                                                    </div>
+                                                </div>
+                 <div class="col-xl-12 fixed-bottom" id="showbtnsxx"
+                                                     style="background-color: black;height: 350px;">
+                                                    <div style="color: white;text-align: center;font-size: 48px;">
+                                                        <p style="margin-top: 3%">คุณต้องการยกเลิกจองคิวไหม
+                                                            <br>
+
+                                                            <input type="button" onclick="resetxxy()" style="font-size: 24px;"
+                                                                   class="btn btn-danger width-150  height-100 m-r-10"
+                                                                   value="ยกเลิก">
+                                                            <button type="submit"
+                                                                    class="btn btn-primary width-150 height-100" style="font-size: 30px;">ยืนยัน
+                                                            </button> &nbsp;
+
+                                                        </p>
+                                                    </div>
+                                                </div>
+                </form>
+
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev"
+               style="top: 1400px;">
+                <span class="carousel-control-prev-icon" aria-hidden="true"
+                      style="color: black;background-color: black;width: 100%;height: 80px"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next nexts" href="#carouselExampleControls" role="button" data-slide="next"
+               style="top: 1400px;">
+                <span class="carousel-control-next-icon" aria-hidden="true"
+                      style="color: black;background-color: black;width: 100%;height: 80px"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+    {% csrf_token %}
+
+</div>
+</body>
+<script src="{% static 'doqs/assets/js/app.min.js' %}"></script>
+<script src="{% static 'doqs/assets/js/theme/apple.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/d3/d3.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/nvd3/build/nv.d3.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-calendar/js/bootstrap_calendar.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/jquery-migrate/dist/jquery-migrate.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/moment/min/moment.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/ion-rangeslider/js/ion.rangeSlider.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/jquery.maskedinput/src/jquery.maskedinput.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/pwstrength-bootstrap/dist/pwstrength-bootstrap.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/@danielfarrell/bootstrap-combobox/js/bootstrap-combobox.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/tag-it/js/tag-it.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-daterangepicker/daterangepicker.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/select2/dist/js/select2.min.js' %}"></script>
+<script src="{% static 'doqs/assets/js/demo/table-manage-responsive.demo.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/d3/d3.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-show-password/dist/bootstrap-show-password.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/bootstrap-colorpalette/js/bootstrap-colorpalette.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/jquery-simplecolorpicker/jquery.simplecolorpicker.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/clipboard/dist/clipboard.min.js' %}"></script>
+<script src="{% static 'doqs/assets/js/demo/form-plugins.demo.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/fullcalendar/dist/fullcalendar.min.js' %}"></script>
+<script src="{% static 'doqs/assets/plugins/fullcalendar/dist/locale/th.js' %}"></script>
+<link href="{% static 'doqs/assets/plugins/ionicons/css/ionicons.min.css' %}" rel="stylesheet"/>
+<script>
+
+    $(function () {
+        $(".testshow input[type=checkbox]").click(function () {
+            if ($(this).is(":checked")) {
+                $("#tblFruits input[type=checkbox]").removeAttr("checked");
+                $(this).attr("checked", "checked");
+            }
+        });
+    });
+    var dateshow;
+
+    function toThaiDateString(date) {
+        let monthNames = [
+            "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน",
+            "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม.",
+            "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+        ];
+
+        let year = date.getFullYear() + 543;
+        let month = monthNames[date.getMonth()];
+        let numOfDay = date.getDate();
+
+        let hour = date.getHours().toString().padStart(2, "0");
+        let minutes = date.getMinutes().toString().padStart(2, "0");
+        let second = date.getSeconds().toString().padStart(2, "0");
+
+        return `${numOfDay} ${month} ${year} `;
+    }
+
+    var datecheck = [""];
+    var staff_id =  '';
+    var dpm_id =  '';
+
+    $('#department').change(function () {
+        var id_department = $(this).val();
+         dpm_id = $(this).val();
+        $.ajax({
+            type: "POST",
+            url: "{% url 'checkad' %}",
+            data: {
+                id: id_department,
+                dateshow: dateshow,
+                'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val(),
+                function: 'department'
+            },
+            success: function (data) {
+                $('.tr-append-add').remove();
+                console.log(data.selectOFif);
+                if (data.selectOFif.length > 0) {
+                    $('#staff').find('option').remove()
+                    $('#staff').append("<option value=''>แพทย์/เจ้าหน้าที่</option>")
+                    jQuery.each(data.selectOFif, function (index, item) {
+                        $('#staff').append("<option value='" + item[0] + "'>" + item[1] + "</option>")
+                    });
+                }
+                if (data.bookingshow.length > 0) {
+                    jQuery.each(data.bookingshow, function (index, item) {
+                        if (item[7] < item[4]) {
+                            if (item[5] == '') {
+                                $('#test').append('<tr class="tr-append-add"> ' +
+                                    '<td>' +
+                                    '<span>' + item[10] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[2] + '-' + item[3] + ' ' +
+                                    '</span>' +
+                                    '<input type="hidden" name="re_sta" class="form-control" value="{{ re_sta }}">' +
+                                    '<input type="hidden" name="re_dep" class="form-control" value="{{ re_dep }}">' +
+                                    '<input type="hidden" name="re_hos" class="form-control" value="{{ re_hos }}">' +
+                                    '<input type="hidden" name="checkdelete" class="form-control" value="2">' +
+                                    '<input type="hidden" name="id' + item[0] + '" class="form-control" value="' + item[0] + '" >' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[7] + '/' + item[4] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<div class="col-lg-12">' +
+                                    '<input id="xxxxx"  onchange="testes(this);" class="form-control form-control-lg checkbookingss" value="1" name="even' + item[0] + '" type="checkbox">' +
+                                    '</div>' +
+                                    '</td>' +
+                                    '</tr>');
+                                    document.getElementById('event').value = item[6];
+                            }
+                            if (item[5] == 'check' && item[6] == '') {
+                                $('#test').append('<tr class="tr-append-add"> ' +
+                                    '<td>' +
+                                    '<span>' + item[10] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[2] + '-' + item[3] + ' ' +
+                                    '</span>' +
+                                    '<input type="hidden" name="re_sta" class="form-control" value="{{ re_sta }}">' +
+                                    '<input type="hidden" name="re_dep" class="form-control" value="{{ re_dep }}">' +
+                                    '<input type="hidden" name="re_hos" class="form-control" value="{{ re_hos }}">' +
+                                    '<input type="hidden" name="id' + item[0] + '" class="form-control" value="' + item[0] + '" >' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[7] + '/' + item[4] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<input id="xxxxx" onchange="testes(this);" class="form-control form-control-lg checkbookingss" value="1" name="even' + item[0] + '" type="checkbox" disabled>' +
+                                    '</td>' +
+                                    '</tr>');
+                                    document.getElementById('event').value = item[6];
+                            }
+                            if (item[5] == 'check' && item[6] != '') {
+                                $('#test').append('<tr class="tr-append-add"> ' +
+                                    '<td>' +
+                                    '<span>' + item[10] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[2] + '-' + item[3] + ' ' +
+                                    '</span>' +
+                                    '<input type="hidden" name="re_sta" class="form-control" value="{{ re_sta }}">' +
+                                    '<input type="hidden" name="re_dep" class="form-control" value="{{ re_dep }}">' +
+                                    '<input type="hidden" name="re_hos" class="form-control" value="{{ re_hos }}">' +
+                                    '<input type="hidden" name="checkdelete" class="form-control" value="1">' +
+                                    '<input type="hidden" name="id' + item[0] + '" class="form-control" value="' + item[0] + '" >' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[7] + '/' + item[4] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<input id="xxxxxx" onchange="testest(this);" class="form-control form-control-lg checkbookingss xxxxxx" value="1" name="even' + item[0] + '" type="checkbox" checked>' +
+                                    '</td>' +
+                                    '</tr>');
+                                document.getElementById('event').value = item[6];
+                            }
+                        } else {
+                            $('#test').append('<tr class="tr-append-add"> ' +
+                                 '<td>' +
+                                '<span>' + item[10] + '' +
+                                '</span>' +
+                                '</td>' +
+                                '<td>' +
+                                '<span>' + item[2] + '-' + item[3] + ' ' +
+                                '</span>' +
+                                '<input type="hidden" name="re_sta" class="form-control" value="{{ re_sta }}">' +
+                                '<input type="hidden" name="re_dep" class="form-control" value="{{ re_dep }}">' +
+                                '<input type="hidden" name="re_hos" class="form-control" value="{{ re_hos }}">' +
+                                '<input type="hidden" name="checkdelete" class="form-control" value="1">' +
+                                '<input type="hidden" name="id' + item[0] + '" class="form-control" value="' + item[0] + '" >' +
+                                '</td>' +
+                                '<td>' +
+                                '<span>' + item[7] + '/' + item[4] + '' +
+                                '</span>' +
+                                '</td>' +
+                                '<td>' +
+                                '<span>มีผู้ใช้จองคิวครบแล้ว' +
+                                '</span>' +
+                                '</td>' +
+                                '</tr>');
+                            document.getElementById('event').value = item[6];
+                        }
+                    });
+                      $(function () {
+                                        function groupTable($rows, startIndex, total) {
+                                            if (total === 0) {
+                                                return;
+                                            }
+                                            var i, currentIndex = startIndex, count = 1, lst = [];
+                                            var tds = $rows.find('td:eq(' + currentIndex + ')');
+                                            var ctrl = $(tds[0]);
+                                            lst.push($rows[0]);
+                                            for (i = 1; i <= tds.length; i++) {
+                                                if (ctrl.text() == $(tds[i]).text()) {
+                                                    count++;
+                                                    $(tds[i]).addClass('deleted');
+                                                    lst.push($rows[i]);
+                                                } else {
+                                                    if (count > 1) {
+                                                        ctrl.attr('rowspan', count);
+                                                        groupTable($(lst), startIndex + 1, total - 1)
+                                                    }
+                                                    count = 1;
+                                                    lst = [];
+                                                    ctrl = $(tds[i]);
+                                                    lst.push($rows[i]);
+                                                }
+                                            }
+                                        }
+
+                                        groupTable($('#test tr:has(td)'), 0, 3);
+                                        $('#test .deleted').remove();
+                                    });
+                } if (data.bookingshow.length == 0){
+                     $('#test').append('<tr class="tr-append-add"> ' +
+                         '<td colspan="4" style="text-align: center">' +
+                                '<span>ไม่มีข้อมูล' +
+                                '</span>' +
+                                '</td>' +
+                                '</tr>');
+                    document.getElementById('event').value = '';
+                    $('.tr-append-add').remove();
+                }
+                $('table [type="checkbox"]').each(function (i, chk) {
+                    if (chk.checked) {
+
+                    }
+                });
+            }
+        });
+    });
+    $('#staff').change(function () {
+        var id_staff = $(this).val();
+        staff_id = $(this).val();
+          if (id_staff == "") {
+             $.ajax({
+            type: "POST",
+            url: "{% url 'checkad' %}",
+            data: {
+                id: dpm_id,
+                dateshow: dateshow,
+                'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val(),
+                function: 'department'
+            },
+            success: function (data) {
+                $('.tr-append-add').remove();
+                console.log(data.selectOFif);
+                if (data.selectOFif.length > 0) {
+                    $('#staff').find('option').remove()
+                    $('#staff').append("<option value=''>แพทย์/เจ้าหน้าที่</option>")
+                    jQuery.each(data.selectOFif, function (index, item) {
+                        $('#staff').append("<option value='" + item[0] + "'>" + item[1] + "</option>")
+                    });
+                }
+                if (data.bookingshow.length > 0) {
+                    jQuery.each(data.bookingshow, function (index, item) {
+                        if (item[7] < item[4]) {
+                            if (item[5] == '') {
+                                $('#test').append('<tr class="tr-append-add"> ' +
+                                    '<td>' +
+                                    '<span>' + item[10] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[2] + '-' + item[3] + ' ' +
+                                    '</span>' +
+                                    '<input type="hidden" name="re_sta" class="form-control" value="{{ re_sta }}">' +
+                                    '<input type="hidden" name="re_dep" class="form-control" value="{{ re_dep }}">' +
+                                    '<input type="hidden" name="re_hos" class="form-control" value="{{ re_hos }}">' +
+                                    '<input type="hidden" name="checkdelete" class="form-control" value="2">' +
+                                    '<input type="hidden" name="id' + item[0] + '" class="form-control" value="' + item[0] + '" >' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[7] + '/' + item[4] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<div class="col-lg-12">' +
+                                    '<input id="xxxxx"  onchange="testes(this);" class="form-control form-control-lg checkbookingss" value="1" name="even' + item[0] + '" type="checkbox">' +
+                                    '</div>' +
+                                    '</td>' +
+                                    '</tr>');
+                            }
+                            if (item[5] == 'check' && item[6] == '') {
+                                $('#test').append('<tr class="tr-append-add"> ' +
+                                    '<td>' +
+                                    '<span>' + item[10] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[2] + '-' + item[3] + ' ' +
+                                    '</span>' +
+                                    '<input type="hidden" name="re_sta" class="form-control" value="{{ re_sta }}">' +
+                                    '<input type="hidden" name="re_dep" class="form-control" value="{{ re_dep }}">' +
+                                    '<input type="hidden" name="re_hos" class="form-control" value="{{ re_hos }}">' +
+                                    '<input type="hidden" name="id' + item[0] + '" class="form-control" value="' + item[0] + '" >' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[7] + '/' + item[4] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<input id="xxxxx" onchange="testes(this);" class="form-control form-control-lg checkbookingss" value="1" name="even' + item[0] + '" type="checkbox" disabled>' +
+                                    '</td>' +
+                                    '</tr>');
+                            }
+                            if (item[5] == 'check' && item[6] != '') {
+                                $('#test').append('<tr class="tr-append-add"> ' +
+                                    '<td>' +
+                                    '<span>' + item[10] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[2] + '-' + item[3] + ' ' +
+                                    '</span>' +
+                                    '<input type="hidden" name="re_sta" class="form-control" value="{{ re_sta }}">' +
+                                    '<input type="hidden" name="re_dep" class="form-control" value="{{ re_dep }}">' +
+                                    '<input type="hidden" name="re_hos" class="form-control" value="{{ re_hos }}">' +
+                                    '<input type="hidden" name="checkdelete" class="form-control" value="1">' +
+                                    '<input type="hidden" name="id' + item[0] + '" class="form-control" value="' + item[0] + '" >' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[7] + '/' + item[4] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<input id="xxxxxx" onchange="testest(this);" class="form-control form-control-lg xxxxxx" value="1" name="even' + item[0] + '" type="checkbox" checked>' +
+                                    '</td>' +
+                                    '</tr>');
+                                document.getElementById('event').value = item[6];
+                            }
+                        } else {
+                            $('#test').append('<tr class="tr-append-add"> ' +
+                                 '<td>' +
+                                '<span>' + item[10] + '' +
+                                '</span>' +
+                                '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[2] + '-' + item[3] + ' ' +
+                                    '</span>' +
+                                '<input type="hidden" name="re_sta" class="form-control" value="{{ re_sta }}">' +
+                                '<input type="hidden" name="re_dep" class="form-control" value="{{ re_dep }}">' +
+                                '<input type="hidden" name="re_hos" class="form-control" value="{{ re_hos }}">' +
+                                '<input type="hidden" name="checkdelete" class="form-control" value="1">' +
+                                '<input type="hidden" name="id' + item[0] + '" class="form-control" value="' + item[0] + '" >' +
+                                '</td>' +
+                                '<td>' +
+                                '<span>' + item[7] + '/' + item[4] + '' +
+                                '</span>' +
+                                '</td>' +
+                                '<td>' +
+                                '<span>มีผู้ใช้จองคิวครบแล้ว' +
+                                '</span>' +
+                                '</td>' +
+                                '</tr>');
+                            document.getElementById('event').value = item[6];
+                        }
+                    });
+                      $(function () {
+                                        function groupTable($rows, startIndex, total) {
+                                            if (total === 0) {
+                                                return;
+                                            }
+                                            var i, currentIndex = startIndex, count = 1, lst = [];
+                                            var tds = $rows.find('td:eq(' + currentIndex + ')');
+                                            var ctrl = $(tds[0]);
+                                            lst.push($rows[0]);
+                                            for (i = 1; i <= tds.length; i++) {
+                                                if (ctrl.text() == $(tds[i]).text()) {
+                                                    count++;
+                                                    $(tds[i]).addClass('deleted');
+                                                    lst.push($rows[i]);
+                                                } else {
+                                                    if (count > 1) {
+                                                        ctrl.attr('rowspan', count);
+                                                        groupTable($(lst), startIndex + 1, total - 1)
+                                                    }
+                                                    count = 1;
+                                                    lst = [];
+                                                    ctrl = $(tds[i]);
+                                                    lst.push($rows[i]);
+                                                }
+                                            }
+                                        }
+
+                                        groupTable($('#test tr:has(td)'), 0, 3);
+                                        $('#test .deleted').remove();
+                                    });
+                } else {
+                     $('#test').append('<tr class="tr-append-add"> ' +
+                                 '<td colspan="4" style="text-align: center">' +
+                                '<span>ไม่มีข้อมูล' +
+                                '</span>' +
+                                '</td>' +
+                                '</tr>');
+                    document.getElementById('event').value = '';
+                    $('.tr-append-add').remove();
+                }
+                $('table [type="checkbox"]').each(function (i, chk) {
+                    if (chk.checked) {
+
+                    }
+                });
+            }
+        });
+          }else {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'checkad' %}",
+            data: {
+                id: id_staff,
+                dateshow: dateshow,
+                'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val(),
+                function: 'staff'
+            },
+            success: function (data) {
+                $('.tr-append-add').remove();
+                console.log(data.bookingshow.length)
+                if (data.bookingshow.length > 0) {
+                    jQuery.each(data.bookingshow, function (index, item) {
+                        if (item[5] == '') {
+                            $('#test').append('<tr class="tr-append-add"> ' +
+                                     '<td>' +
+                                    '<span>' + item[10] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[2] + '-' + item[3] + ' ' +
+                                    '</span>' +
+                                '<input type="hidden" name="re_sta" class="form-control" value="{{ re_sta }}">' +
+                                '<input type="hidden" name="re_dep" class="form-control" value="{{ re_dep }}">' +
+                                '<input type="hidden" name="re_hos" class="form-control" value="{{ re_hos }}">' +
+                                '<input type="hidden" name="checkdelete" class="form-control" value="2">' +
+                                '<input type="hidden" name="id' + item[0] + '" class="form-control" value="' + item[0] + '" >' +
+                                '</td>' +
+                                '<td>' +
+                                '<span>' + item[7] + '/' + item[4] + '' +
+                                '</span>' +
+                                '</td>' +
+                                '<td>' +
+                                '<div class="col-lg-12">' +
+                                '<input id="xxxxx"  onchange="testes(this);" class="form-control form-control-lg checkbookingss" value="1" name="even' + item[0] + '" type="checkbox">' +
+                                '</div>' +
+                                '</td>' +
+                                '</tr>');
+                        }
+                        if (item[5] == 'check' && item[6] == '') {
+                            $('#test').append('<tr class="tr-append-add"> ' +
+                                   '<td>' +
+                                    '<span>' + item[10] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[2] + '-' + item[3] + ' ' +
+                                    '</span>' +
+                                '<input type="hidden" name="re_sta" class="form-control" value="{{ re_sta }}">' +
+                                '<input type="hidden" name="re_dep" class="form-control" value="{{ re_dep }}">' +
+                                '<input type="hidden" name="re_hos" class="form-control" value="{{ re_hos }}">' +
+                                '<input type="hidden" name="id' + item[0] + '" class="form-control" value="' + item[0] + '" >' +
+                                '</td>' +
+                                '<td>' +
+                                '<span>' + item[7] + '/' + item[4] + '' +
+                                '</span>' +
+                                '</td>' +
+                                '<td>' +
+                                '<input id="xxxxx" onchange="testes(this);" class="form-control form-control-lg checkbookingss" value="1" name="even' + item[0] + '" type="checkbox" disabled>' +
+                                '</td>' +
+                                '</tr>');
+                        }
+                        if (item[5] == 'check' && item[6] != '') {
+                            $('#test').append('<tr class="tr-append-add"> ' +
+                                    '<td>' +
+                                    '<span>' + item[10] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[2] + '-' + item[3] + ' ' +
+                                    '</span>' +
+                                '<input type="hidden" name="re_sta" class="form-control" value="{{ re_sta }}">' +
+                                '<input type="hidden" name="re_dep" class="form-control" value="{{ re_dep }}">' +
+                                '<input type="hidden" name="re_hos" class="form-control" value="{{ re_hos }}">' +
+                                '<input type="hidden" name="checkdelete" class="form-control" value="1">' +
+                                '<input type="hidden" name="id' + item[0] + '" class="form-control" value="' + item[0] + '" >' +
+                                '</td>' +
+                                '<td>' +
+                                '<span>' + item[7] + '/' + item[4] + '' +
+                                '</span>' +
+                                '</td>' +
+                                '<td>' +
+                                '<input id="xxxxxx" onchange="testest(this);" class="form-control form-control-lg xxxxxx" value="1" name="even' + item[0] + '" type="checkbox" checked>' +
+                                '</td>' +
+                                '</tr>');
+                            document.getElementById('event').value = item[6];
+                        }
+                    });
+                       $(function () {
+                                        function groupTable($rows, startIndex, total) {
+                                            if (total === 0) {
+                                                return;
+                                            }
+                                            var i, currentIndex = startIndex, count = 1, lst = [];
+                                            var tds = $rows.find('td:eq(' + currentIndex + ')');
+                                            var ctrl = $(tds[0]);
+                                            lst.push($rows[0]);
+                                            for (i = 1; i <= tds.length; i++) {
+                                                if (ctrl.text() == $(tds[i]).text()) {
+                                                    count++;
+                                                    $(tds[i]).addClass('deleted');
+                                                    lst.push($rows[i]);
+                                                } else {
+                                                    if (count > 1) {
+                                                        ctrl.attr('rowspan', count);
+                                                        groupTable($(lst), startIndex + 1, total - 1)
+                                                    }
+                                                    count = 1;
+                                                    lst = [];
+                                                    ctrl = $(tds[i]);
+                                                    lst.push($rows[i]);
+                                                }
+                                            }
+                                        }
+
+                                        groupTable($('#test tr:has(td)'), 0, 3);
+                                        $('#test .deleted').remove();
+                                    });
+                }  if (data.bookingshow.length == 0) {
+                     $('#test').append('<tr class="tr-append-add"> ' +
+                         '<td colspan="4" style="text-align: center">' +
+                                '<span>ไม่มีข้อมูล' +
+                                '</span>' +
+                                '</td>' +
+                                '</tr>');
+                    document.getElementById('event').value = '';
+                    $('.tr-append-add').remove();
+                }
+                $('table [type="checkbox"]').each(function (i, chk) {
+                    if (chk.checked) {
+
+                    }
+                });
+            }
+        });
+        }
+    });
+
+    $(document).ready(function () {
+        $('#calendarperson').fullCalendar({
+            displayEventTime: false,
+            eventLimit: true,
+            draggable: false,
+            defaultView: 'month',
+            locale: 'th',
+            firstDay: 0,
+            header: {
+                left: 'prev ',
+                center: 'title',
+                right: 'next'
+            },
+            dayClick: function (date, jsEvent, view) {
+              var z = new Date().toISOString().split('T')[0];
+
+                if (date.format() > z) {
+                       if ($('input.checkbox-multiselect-date').is(':checked')) {
+                    var memDateList = $('.input-hidden-memory-date').val();
+                    memDateList = (memDateList.length > 0) ? memDateList + ',' : '';
+                    dateList = memDateList + date.format();
+                } else {
+                    $(this).parents().parents().parents().parents().parents().parents().find('td').css('background-color', '');
+                    {#console.log($(this).parents().parents().parents().parents().parents().parents().html());#}
+                    dateList = date.format();
+                    dateshow = dateList;
+                    //show time
+                    var test_list_ids = JSON.stringify(test_list_ids);
+                }
+                var d = new Date(dateList);
+                document.getElementById('textdate').innerHTML = toThaiDateString(d);
+                document.getElementById('textdate2').innerHTML = toThaiDateString(d);
+                $(this).css('background-color', '#158900');
+                  $.ajax({
+                        url: "{% url 'fiterbookan' %}",
+                        type: 'POST',
+                        data: {
+                            'dateList': dateList,
+                            'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()
+                        },
+                        success: function (data) {
+                            if (data.count > 0) {
+                                $('.nexts').show()
+                                document.getElementById('color1').style.backgroundColor = data.color;
+                                document.getElementById('color11').style.backgroundColor = data.color2;
+                                document.getElementById('color2').style.backgroundColor = data.color;
+                                document.getElementById('color21').style.backgroundColor = data.color2;
+                                document.getElementById('textqueue1').innerHTML = data.number;
+                                document.getElementById('textqueue11').innerHTML = data.count;
+                                document.getElementById('textqueue2').innerHTML = data.number;
+                                document.getElementById('textqueue21').innerHTML = data.count;
+                                $("[data-date=" + dateList + "]").css("background-color", data.color);
+                            } else {
+                                $('.nexts').hide()
+                                document.getElementById('color1').style.backgroundColor = 'mediumseagreen';
+                                document.getElementById('color11').style.backgroundColor = 'seagreen';
+                                document.getElementById('color2').style.backgroundColor = 'mediumseagreen';
+                                document.getElementById('color21').style.backgroundColor = 'seagreen';
+                                document.getElementById('textqueue1').innerHTML = '0';
+                                document.getElementById('textqueue11').innerHTML = '0';
+                                document.getElementById('textqueue2').innerHTML = '0';
+                                document.getElementById('textqueue21').innerHTML = '0';
+                            }
+                            if (data.count == data.number) {
+                                $('.nexts').hide()
+                            }
+                            if (data.shows == 1) {
+                                $('.nexts').show()
+                            }
+                        },
+                    })
+                      if (dpm_id && staff_id == "") {
+                           $.ajax({
+            type: "POST",
+            url: "{% url 'checkad' %}",
+            data: {
+                id: iddpm,
+                dateshow: dateshow,
+                'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val(),
+                function: 'department'
+            },
+            success: function (data) {
+                $('.tr-append-add').remove();
+                console.log(data.selectOFif);
+                if (data.selectOFif.length > 0) {
+                    $('#staff').find('option').remove()
+                    $('#staff').append("<option value=''>แพทย์/เจ้าหน้าที่</option>")
+                    jQuery.each(data.selectOFif, function (index, item) {
+                        $('#staff').append("<option value='" + item[0] + "'>" + item[1] + "</option>")
+                    });
+                }
+                if (data.bookingshow.length > 0) {
+                    jQuery.each(data.bookingshow, function (index, item) {
+                        if (item[7] < item[4]) {
+                            if (item[5] == '') {
+                                $('#test').append('<tr class="tr-append-add"> ' +
+                                    '<td>' +
+                                    '<span>' + item[10] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[2] + '-' + item[3] + ' ' +
+                                    '</span>' +
+                                    '<input type="hidden" name="re_sta" class="form-control" value="{{ re_sta }}">' +
+                                    '<input type="hidden" name="re_dep" class="form-control" value="{{ re_dep }}">' +
+                                    '<input type="hidden" name="re_hos" class="form-control" value="{{ re_hos }}">' +
+                                    '<input type="hidden" name="checkdelete" class="form-control" value="2">' +
+                                    '<input type="hidden" name="id' + item[0] + '" class="form-control" value="' + item[0] + '" >' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[7] + '/' + item[4] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<div class="col-lg-12">' +
+                                    '<input id="xxxxx"  onchange="testes(this);" class="form-control form-control-lg checkbookingss" value="1" name="even' + item[0] + '" type="checkbox">' +
+                                    '</div>' +
+                                    '</td>' +
+                                    '</tr>');
+                                    document.getElementById('event').value = item[6];
+                            }
+                            if (item[5] == 'check' && item[6] == '') {
+                                $('#test').append('<tr class="tr-append-add"> ' +
+                                    '<td>' +
+                                    '<span>' + item[10] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[2] + '-' + item[3] + ' ' +
+                                    '</span>' +
+                                    '<input type="hidden" name="re_sta" class="form-control" value="{{ re_sta }}">' +
+                                    '<input type="hidden" name="re_dep" class="form-control" value="{{ re_dep }}">' +
+                                    '<input type="hidden" name="re_hos" class="form-control" value="{{ re_hos }}">' +
+                                    '<input type="hidden" name="id' + item[0] + '" class="form-control" value="' + item[0] + '" >' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[7] + '/' + item[4] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<input id="xxxxx" onchange="testes(this);" class="form-control form-control-lg checkbookingss" value="1" name="even' + item[0] + '" type="checkbox" disabled>' +
+                                    '</td>' +
+                                    '</tr>');
+                                    document.getElementById('event').value = item[6];
+                            }
+                            if (item[5] == 'check' && item[6] != '') {
+                                $('#test').append('<tr class="tr-append-add"> ' +
+                                    '<td>' +
+                                    '<span>' + item[10] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[2] + '-' + item[3] + ' ' +
+                                    '</span>' +
+                                    '<input type="hidden" name="re_sta" class="form-control" value="{{ re_sta }}">' +
+                                    '<input type="hidden" name="re_dep" class="form-control" value="{{ re_dep }}">' +
+                                    '<input type="hidden" name="re_hos" class="form-control" value="{{ re_hos }}">' +
+                                    '<input type="hidden" name="checkdelete" class="form-control" value="1">' +
+                                    '<input type="hidden" name="id' + item[0] + '" class="form-control" value="' + item[0] + '" >' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[7] + '/' + item[4] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<input id="xxxxxx" onchange="testest(this);" class="form-control form-control-lg checkbookingss xxxxxx" value="1" name="even' + item[0] + '" type="checkbox" checked>' +
+                                    '</td>' +
+                                    '</tr>');
+                                document.getElementById('event').value = item[6];
+                            }
+                        } else {
+                            $('#test').append('<tr class="tr-append-add"> ' +
+                                 '<td>' +
+                                '<span>' + item[10] + '' +
+                                '</span>' +
+                                '</td>' +
+                                '<td>' +
+                                '<span>' + item[2] + '-' + item[3] + ' ' +
+                                '</span>' +
+                                '<input type="hidden" name="re_sta" class="form-control" value="{{ re_sta }}">' +
+                                '<input type="hidden" name="re_dep" class="form-control" value="{{ re_dep }}">' +
+                                '<input type="hidden" name="re_hos" class="form-control" value="{{ re_hos }}">' +
+                                '<input type="hidden" name="checkdelete" class="form-control" value="1">' +
+                                '<input type="hidden" name="id' + item[0] + '" class="form-control" value="' + item[0] + '" >' +
+                                '</td>' +
+                                '<td>' +
+                                '<span>' + item[7] + '/' + item[4] + '' +
+                                '</span>' +
+                                '</td>' +
+                                '<td>' +
+                                '<span>มีผู้ใช้จองคิวครบแล้ว' +
+                                '</span>' +
+                                '</td>' +
+                                '</tr>');
+                            document.getElementById('event').value = item[6];
+                        }
+                    });
+                      $(function () {
+                                        function groupTable($rows, startIndex, total) {
+                                            if (total === 0) {
+                                                return;
+                                            }
+                                            var i, currentIndex = startIndex, count = 1, lst = [];
+                                            var tds = $rows.find('td:eq(' + currentIndex + ')');
+                                            var ctrl = $(tds[0]);
+                                            lst.push($rows[0]);
+                                            for (i = 1; i <= tds.length; i++) {
+                                                if (ctrl.text() == $(tds[i]).text()) {
+                                                    count++;
+                                                    $(tds[i]).addClass('deleted');
+                                                    lst.push($rows[i]);
+                                                } else {
+                                                    if (count > 1) {
+                                                        ctrl.attr('rowspan', count);
+                                                        groupTable($(lst), startIndex + 1, total - 1)
+                                                    }
+                                                    count = 1;
+                                                    lst = [];
+                                                    ctrl = $(tds[i]);
+                                                    lst.push($rows[i]);
+                                                }
+                                            }
+                                        }
+
+                                        groupTable($('#test tr:has(td)'), 0, 3);
+                                        $('#test .deleted').remove();
+                                    });
+                } if (data.bookingshow.length == 0){
+                     $('#test').append('<tr class="tr-append-add"> ' +
+                         '<td colspan="4" style="text-align: center">' +
+                                '<span>ไม่มีข้อมูล' +
+                                '</span>' +
+                                '</td>' +
+                                '</tr>');
+                    document.getElementById('event').value = '';
+                    $('.tr-append-add').remove();
+                }
+                $('table [type="checkbox"]').each(function (i, chk) {
+                    if (chk.checked) {
+
+                    }
+                });
+            }
+        });
+                    }
+                        if (staff_id != ""){
+                             $.ajax({
+            type: "POST",
+            url: "{% url 'checkad' %}",
+            data: {
+                id: staff_id,
+                dateshow: dateshow,
+                'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val(),
+                function: 'staff'
+            },
+            success: function (data) {
+                $('.tr-append-add').remove();
+                console.log(data.bookingshow.length)
+                if (data.bookingshow.length > 0) {
+                    jQuery.each(data.bookingshow, function (index, item) {
+                        if (item[5] == '') {
+                            $('#test').append('<tr class="tr-append-add"> ' +
+                                     '<td>' +
+                                    '<span>' + item[10] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[2] + '-' + item[3] + ' ' +
+                                    '</span>' +
+                                '<input type="hidden" name="re_sta" class="form-control" value="{{ re_sta }}">' +
+                                '<input type="hidden" name="re_dep" class="form-control" value="{{ re_dep }}">' +
+                                '<input type="hidden" name="re_hos" class="form-control" value="{{ re_hos }}">' +
+                                '<input type="hidden" name="checkdelete" class="form-control" value="2">' +
+                                '<input type="hidden" name="id' + item[0] + '" class="form-control" value="' + item[0] + '" >' +
+                                '</td>' +
+                                '<td>' +
+                                '<span>' + item[7] + '/' + item[4] + '' +
+                                '</span>' +
+                                '</td>' +
+                                '<td>' +
+                                '<div class="col-lg-12">' +
+                                '<input id="xxxxx"  onchange="testes(this);" class="form-control form-control-lg checkbookingss" value="1" name="even' + item[0] + '" type="checkbox">' +
+                                '</div>' +
+                                '</td>' +
+                                '</tr>');
+                        }
+                        if (item[5] == 'check' && item[6] == '') {
+                            $('#test').append('<tr class="tr-append-add"> ' +
+                                   '<td>' +
+                                    '<span>' + item[10] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[2] + '-' + item[3] + ' ' +
+                                    '</span>' +
+                                '<input type="hidden" name="re_sta" class="form-control" value="{{ re_sta }}">' +
+                                '<input type="hidden" name="re_dep" class="form-control" value="{{ re_dep }}">' +
+                                '<input type="hidden" name="re_hos" class="form-control" value="{{ re_hos }}">' +
+                                '<input type="hidden" name="id' + item[0] + '" class="form-control" value="' + item[0] + '" >' +
+                                '</td>' +
+                                '<td>' +
+                                '<span>' + item[7] + '/' + item[4] + '' +
+                                '</span>' +
+                                '</td>' +
+                                '<td>' +
+                                '<input id="xxxxx" onchange="testes(this);" class="form-control form-control-lg checkbookingss" value="1" name="even' + item[0] + '" type="checkbox" disabled>' +
+                                '</td>' +
+                                '</tr>');
+                        }
+                        if (item[5] == 'check' && item[6] != '') {
+                            $('#test').append('<tr class="tr-append-add"> ' +
+                                    '<td>' +
+                                    '<span>' + item[10] + '' +
+                                    '</span>' +
+                                    '</td>' +
+                                    '<td>' +
+                                    '<span>' + item[2] + '-' + item[3] + ' ' +
+                                    '</span>' +
+                                '<input type="hidden" name="re_sta" class="form-control" value="{{ re_sta }}">' +
+                                '<input type="hidden" name="re_dep" class="form-control" value="{{ re_dep }}">' +
+                                '<input type="hidden" name="re_hos" class="form-control" value="{{ re_hos }}">' +
+                                '<input type="hidden" name="checkdelete" class="form-control" value="1">' +
+                                '<input type="hidden" name="id' + item[0] + '" class="form-control" value="' + item[0] + '" >' +
+                                '</td>' +
+                                '<td>' +
+                                '<span>' + item[7] + '/' + item[4] + '' +
+                                '</span>' +
+                                '</td>' +
+                                '<td>' +
+                                    '<input id="xxxxxx" onchange="testest(this);" class="form-control form-control-lg xxxxxx" value="1" name="even' + item[0] + '" type="checkbox" checked>' +
+                                '</td>' +
+                                '</tr>');
+                            document.getElementById('event').value = item[6];
+                        }
+                    });
+                       $(function () {
+                                        function groupTable($rows, startIndex, total) {
+                                            if (total === 0) {
+                                                return;
+                                            }
+                                            var i, currentIndex = startIndex, count = 1, lst = [];
+                                            var tds = $rows.find('td:eq(' + currentIndex + ')');
+                                            var ctrl = $(tds[0]);
+                                            lst.push($rows[0]);
+                                            for (i = 1; i <= tds.length; i++) {
+                                                if (ctrl.text() == $(tds[i]).text()) {
+                                                    count++;
+                                                    $(tds[i]).addClass('deleted');
+                                                    lst.push($rows[i]);
+                                                } else {
+                                                    if (count > 1) {
+                                                        ctrl.attr('rowspan', count);
+                                                        groupTable($(lst), startIndex + 1, total - 1)
+                                                    }
+                                                    count = 1;
+                                                    lst = [];
+                                                    ctrl = $(tds[i]);
+                                                    lst.push($rows[i]);
+                                                }
+                                            }
+                                        }
+
+                                        groupTable($('#test tr:has(td)'), 0, 3);
+                                        $('#test .deleted').remove();
+                                    });
+                }  if (data.bookingshow.length == 0) {
+                     $('#test').append('<tr class="tr-append-add"> ' +
+                         '<td colspan="4" style="text-align: center">' +
+                                '<span>ไม่มีข้อมูล' +
+                                '</span>' +
+                                '</td>' +
+                                '</tr>');
+                    document.getElementById('event').value = '';
+                    $('.tr-append-add').remove();
+                }
+                $('table [type="checkbox"]').each(function (i, chk) {
+                    if (chk.checked) {
+
+                    }
+                });
+            }
+        });
+                        }
+                }
+            },
+        });
+
+    });
+      $('#showbtns').hide();
+    $('#showbtnsxx').hide();
+    function testes(id) {
+        var myCheckbox = document.getElementsByClassName("checkbookingss");
+        Array.prototype.forEach.call(myCheckbox, function (el) {
+            el.checked = false;
+        });
+        id.checked = true;
+        if ($('.checkbookingss').is(':checked')) {
+            $('#showbtns').show();
+        } else {
+            $('#showbtns').hide();
+        }
+    }
+    function testest(src) {
+        if ($('.xxxxxx').is(':checked')) {
+                $('#showbtnsxx').hide();
+        } else {
+                $('#showbtnsxx').show();
+        }
+    }
+   function resetxxy(){
+        $(".xxxxxx").prop( "checked", true );
+        $('#showbtnsxx').hide();
+    }
+      function resetxxx() {
+        document.getElementById("bookingeventan").reset();
+        $('#showbtns').hide();
+    }
+
+    $('.fc-left').hide();
+
+</script>
+</html>

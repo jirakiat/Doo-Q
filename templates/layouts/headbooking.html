@@ -1,0 +1,100 @@
+{% load static %}
+
+<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="{% static 'doqs/assets/css/apple/app.min.css' %}" rel="stylesheet"/>
+<!-- ================== END BASE CSS STYLE ================== -->
+
+<!-- ================== BEGIN PAGE LEVEL CSS STYLE ================== -->
+<link href="{% static 'doqs/assets/plugins/jvectormap-next/jquery-jvectormap.css' %}" rel="stylesheet"/>
+<link href="{% static 'doqs/assets/plugins/bootstrap-calendar/css/bootstrap_calendar.css' %}" rel="stylesheet"/>
+<link href="{% static 'doqs/assets/plugins/gritter/css/jquery.gritter.css' %}" rel="stylesheet"/>
+<link href="{% static 'doqs/assets/plugins/nvd3/build/nv.d3.css' %}" rel="stylesheet"/>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet">
+<link href="{% static 'doqs/assets/plugins/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'doqs/assets/plugins/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}"
+      rel="stylesheet"/>
+<link href="{% static 'doqs/assets/plugins/fullcalendar/dist/fullcalendar.print.css' %}" rel="stylesheet"
+      media='print'/>
+<link href="{% static 'doqs/assets/plugins/fullcalendar/dist/fullcalendar.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'doqs/assets/plugins/tag-it/css/jquery.tagit.css' %}"  rel="stylesheet"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+<script src="https://fullcalendar.io/js/fullcalendar-2.3.1/fullcalendar.min.js"></script>
+<link rel="stylesheet" href="https://fullcalendar.io/js/fullcalendar-2.3.1/fullcalendar.min.css">
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js'></script>
+
+
+<style>
+    .btnshow {
+        background-color: #4CAF50; /* Green */
+        border: none;
+        color: white;
+        padding-top: 10px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+    }
+
+    #divshowtest {
+        overflow: hidden;
+        z-index: 1;
+        position: absolute;
+        margin-left: 0.8%;
+        bottom: 0;
+        display: none;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'Kanit', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    table.history {
+        font-size: 18px;
+    }
+
+    input::-webkit-input-placeholder {
+        font-size: 14px;
+    }
+
+    .modalcenter {
+        top: 20%;
+    }
+
+    .scollshow {
+        height: auto;
+    }
+
+    .inner-border::-webkit-scrollbar {
+        display: none;
+    }
+
+    .check1 {
+        transform: scale(1.9);
+    }
+
+    .fc-event {
+        text-align: center;
+    }
+
+
+    .show1 {
+        position: absolute;
+        display: block;
+        width: 100%;
+        color: black;
+    }
+
+</style>

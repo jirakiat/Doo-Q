@@ -1,0 +1,338 @@
+{% extends 'masterbooking.html' %}
+{% block show %}
+    <div id="page-loader" class="fade show">
+        <span class="spinner"></span>
+    </div>
+    <!-- end #page-loader -->
+
+    <!-- begin #page-container -->
+    <div id="page-container" class="fade page-sidebar-fixed page-header-fixed">
+        <!-- begin #header -->
+        <div id="header" class="header navbar-default">
+            <!-- begin navbar-header -->
+            <div class="navbar-header">
+                {% if request.session.permission == 1 %}
+                    <a href="{% url 'dashboard' %}" class="navbar-brand">
+                    <span class="navbar-logo"></span>
+                    Doo-Q
+                    เจ้าหน้าที่ {{ request.session.name }}
+                {% else %}
+                    <a href="{% url 'calendar' %}" class="navbar-brand">
+                    <span class="navbar-logo"></span>
+                    Doo-Q
+                    ผู้ป่วย : {{ request.session.name }}
+                {% endif %}</a>
+                <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <span style="width: 100%;  position: relative;font-size: 18px;left: 35%;padding-top: 0.5%;">หน้าเพิ่มแท็กกิจกรรม</span>
+            <!-- end navbar-header --><!-- begin header-nav -->
+            <ul class="navbar-nav navbar-right">
+                <li class="dropdown navbar-user">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        {% if hospitalname %}
+                            <span class="d-none d-md-inline"
+                                  style="font-size: 18px">{{ hospitalname }} - {{ DPM }} </span>
+                        {% endif %}
+                        {% if request.session.permission == 1 %}
+                            {% for datahospitals in datahospital %}
+                                {% if dataST.Hid == datahospitals.Hid %}
+                                    <span class="d-none d-md-inline" style="font-size: 18px">{{ datahospitals.Hname }} -
+                                        {% for dataDPMs in dataDPM %}
+                                            {% if  dataDPMs.Did == Dids %}
+                                                {{ dataDPMs.Dname }}
+                                            {% endif %}
+                                        {% endfor %}</span>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                        {% endif %}
+                        {% if request.session.hn %}
+                            <span class="d-none d-md-inline"
+                                  style="font-size: 18px">กำลังใช้บริการ - {{ request.session.hospital }} </span>
+                        {% endif %}
+                    </a>
+                </li>
+            </ul>
+            <!-- end header navigation right -->
+        </div>
+        <!-- end #header -->
+
+        <!-- begin #sidebar -->
+        <div id="sidebar" class="sidebar">
+            <!-- begin sidebar scrollbar -->
+            <div data-scrollbar="true" data-height="100%">
+                <!-- begin sidebar user -->
+                <ul class="nav">
+                    {% if request.session.permission == 1 %}
+                        <li>
+                            <a href="{% url 'dashboard' %}">
+                                <i class="material-icons">dashboard</i>
+                                <span>dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'callqueue2' %}">
+                                <i class="material-icons">calendar_today</i>
+                                <span>เรียกคิว</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'vtfbooking' %}">
+                                <i class="material-icons">calendar_today</i>
+                                <span>รับคิว</span>
+                            </a>
+                        </li>
+                        <li class="has-sub active">
+                            <a href="{% url 'staff' %}" style="background-color: mediumseagreen">
+                                <i class="material-icons">local_hospital</i>
+                                <span style="text-align: left">แผนก/กลุ่มงาน</span>
+                            </a>
+                            <ul class="sub-menu">
+                                <li class="has-sub">
+                                    <a href="{% url 'sthos' %}">
+                                        <b class="caret"></b>
+                                        <span style="text-align: left">แพทย์/เจ้าหน้าที่(ตามสังกัด)</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul class="sub-menu" style="background-color: #4ed287">
+                                <li class="has-sub">
+                                    <a href="{% url 'tagdpm' %}">
+                                        <b class="caret"></b>
+                                        <span style="text-align: left;color: white">เพิ่มแท็กกิจกรรม</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul class="sub-menu">
+                                <li class="has-sub">
+                                    <a href="{% url 'doctor' %}">
+                                        <b class="caret"></b>
+                                        <span>แผนรับคนไข้</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="{% url 'mnbook' %}">
+                                <i class="material-icons">date_range</i>
+                                <span>กำหนดช่วงเวลา</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'staffinfo' %}">
+                                <i class="material-icons">supervised_user_circle</i>
+                                <span>ข้อมูลส่วนตัว</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{% url 'calendar' %}">
+                                <i class="material-icons">calendar_today</i>
+                                <span>จองคิว</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'person' %}">
+                                <i class="material-icons">calendar_today</i>
+                                <span>HN</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'personinfo' %}">
+                                <i class="material-icons">supervised_user_circle</i>
+                                <span>ข้อมูลส่วนตัว</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <a href="{% url 'dessession' %}" class="btn btn-default">
+                            <i class="material-icons">logout</i>
+                            <span style="color: black;">ออกจากระบบ</span>
+                        </a>
+                    </li>
+                </ul>
+                <!-- end sidebar nav -->
+            </div>
+            <!-- end sidebar scrollbar -->
+        </div>
+        <div class="sidebar-bg"></div>
+        <div class="content" style="font-size: 18px;">
+            <div class="col-lg-12">
+
+                <div class="card card-forum mb-3">
+                    <!-- begin card-header -->
+                    <div class="card-header f-w-600">
+                        <div class="input-group">
+                            <span class="m-r-3">แท็กกิจกรรม</span>&nbsp;<input type="text" id="myInputhos"
+                                                                               class="form-control form-control-lg"
+                                                                               placeholder="ค้นหา"/>
+                            <button class="btn btn-gray"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                    <br>
+                    <!-- end card-header -->
+                    <!-- begin forum-list -->
+                    <ul class="forum-list">
+                        <table width="100%"
+                               class="table test-list">
+                            <thead style="font-size: 18px;">
+                            <tr class="odd gradeX">
+                                <th><input type="checkbox" class="check1"
+                                           onclick="checkalltime(this);"></th>
+                                <th>แท็กกิจกรรม</th>
+                                <th>แก้ไข</th>
+                            </tr>
+                            </thead>
+                            <tbody style="font-size: 18px;" id="myTablehos">
+                            {% for datatag in datatag %}
+                                <tr>
+                                    <td><input type="checkbox" id="checkbox1" name="test"
+                                               class="checkbox-hospitaltime-id checkbox-timehos check1"
+                                               value="{{ datatag.id }}"></td>
+                                    <td>{{ datatag.tags }}</td>
+                                    <td><a href="#modal-dialog{{ datatag.id }}" class="btn btn-sm btn-warning width-80"
+                                           data-toggle="modal">แก้ไข</a></td>
+                                    <div class="modal fade" id="modal-dialog{{ datatag.id }}">
+                                        <div class="modal-dialog">
+                                            <form class="form-horizontal form-bordered" action="{% url 'edittags' %}"
+                                                  method="post">
+                                                {% csrf_token %}
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">แก้ไข tag</h4>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-hidden="true">×
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>
+                                                            <input type="text" value="{{ datatag.tags }}"
+                                                                   class="form-control" name="tagsxx">
+                                                            <input type="hidden" value="{{ datatag.id }}" name="tagid">
+                                                        </p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <a href="javascript:;" class="btn btn-danger"
+                                                           data-dismiss="modal">ปิด</a>
+                                                        <a href="javascript:;" class="btn btn-primary">บันทึก</a>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                </tr>
+                            {% endfor %}
+                </tbody>
+                </table>
+                </li>
+                </ul>
+                <!-- end forum-list -->
+            </div>
+            <div class="float-right">
+                <button class="btn btn-outline-danger btn-deletetimehos width-100 m-r-20">ลบ</button>
+                <button class="pull-right btn btn-outline-primary width-100" onclick="group(this);"><i
+                        class="fas fa-plus"></i></button>
+            </div>
+            <br> <br>
+            <div class="col-lg-12" id="div-addstaff">
+                <!-- begin panel -->
+                <div class="form-group row">
+                    <div class="col-lg-12">
+                        <ul id="jquery-tagIt-success" class="success">
+                        </ul>
+                    </div>
+                </div>
+                <form class="form-horizontal form-bordered" action="{% url 'addtags' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="tagsx" class="input-hidden-memory-date" style="width: 100%">
+                    <button type="submit" class="btn btn-primary pull-right">บันทึก</button>
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    </div>
+
+    <script>
+        function checkalltime(source) {
+            var checkboxes = document.querySelectorAll('input[id="checkbox1"]');
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i] != source)
+                    checkboxes[i].checked = source.checked;
+            }
+        }
+
+        $('#div-addstaff').hide();
+
+        function group(src) {
+            $('#div-addstaff').show();
+        }
+
+        var y = 0;
+        var z = 0;
+        var tags = []
+        $('.ui-icon ui-icon-close').hide();
+        $(document).ready(function () {
+            $(window).keydown(function (event) {
+                if (event.keyCode == 13) {
+                    if (y < 0) {
+                        y = 0
+                    }
+                    $('.tagit-close').hide();
+                    var x = document.getElementsByName('tags')[y].value;
+                    console.log(x)
+                    tags.push(x)
+                    console.log(tags)
+                    z = y
+                    y = y + 1;
+
+                }
+                $('.input-hidden-memory-date').val(tags);
+            });
+            $(window).keydown(function (event) {
+                if (event.keyCode == 8) {
+                    if (y < 0) {
+                        y = 0
+                    }
+                    if (z <= y) {
+                        y = y - 1
+                        z = y
+                        $('.tagit-close').hide();
+                        tags.splice(z, 1);
+                        console.log(z)
+                        console.log(tags)
+                    }
+                }
+                $('.input-hidden-memory-date').val(tags);
+            });
+        });
+        $(".btn-deletetimehos").click(function () {
+            var test_list_ids = [];
+            $(".checkbox-timehos:checked").each(function () {
+                test_list_ids.push(this.value);
+            });
+
+            var test_list_ids = JSON.stringify(test_list_ids);
+
+            $.ajax({
+                url: "{% url 'deletetags' %}",
+                type: 'POST',
+                data: {
+                    'test_list_ids': test_list_ids,
+                    'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()
+                },
+            })
+            setTimeout(function () {
+                window.location.reload(true);
+            }, 300);
+        });
+    </script>
+{% endblock %}

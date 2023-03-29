@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <title>Permission</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/responsive/2.2.7/css/responsive.bootstrap4.min.css">
+    <script type="text/javascript" src="/media/js/site.js?_=30648b1410332bada11fa3ff8050ff88"></script>
+    <script type="text/javascript"
+            src="/media/js/dynamic.php?comments-page=extensions%2Fresponsive%2Fexamples%2Fstyling%2Fbootstrap4.html"
+            async></script>
+    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" language="javascript"
+            src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" language="javascript"
+            src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript" language="javascript"
+            src="https://cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" language="javascript"
+            src="https://cdn.datatables.net/responsive/2.2.7/js/responsive.bootstrap4.min.js"></script>
+    <script type="text/javascript" language="javascript" src="../../../../examples/resources/demo.js"></script>
+    <script type="text/javascript" class="init">
+
+        $(document).ready(function () {
+            $('#example').DataTable({
+                "order": [[3, "DESC"]],
+                responsive: true,
+                "language": {
+            "lengthMenu": "แสดง _MENU_ รายการ",
+            "search": "ค้นหา:",
+            "zeroRecords": "<p style='font-size: 18px;'><i class='fas fa-lg fa-eye-slash'></i>ไม่มีข้อมูล<p>",
+            "info": "Showing page _PAGE_ of _PAGES_",
+            "infoEmpty": "ไม่มีข้อมูล",
+        }
+            });
+        });
+
+    </script>
+</head>
+<body class="wide comments example dt-example-bootstrap4">
+<div class="container" id="content">
+    <br>
+    <br>
+    <br>
+    <table id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+        <thead>
+        <tr>
+            <th>รหัสผู้ใช้</th>
+            <th>ชื่อผู้ใช้</th>
+            <th>สถานะ</th>
+            <th>ให้สิทธิ</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for staffshows in staffshow %}
+            <tr>
+                <td>{{ staffshows.0 }}</td>
+                <td>{{ staffshows.1 }}</td>
+                <td>
+                    {% if staffshows.7 == 0 %}
+                        <p>รอยืนยันสิทธิ์</p>
+                    {% endif %}
+                    {% if staffshows.7 == 1 %}
+                        <p style="color: green">ยืนยันสิทธิ์แล้ว</p>
+                    {% endif %}
+                </td>
+                {% if staffshows.7 == 0 %}
+                    <td>
+                        <a href="{% url 'permission' staffshows.4 %}" class="btn btn-success">ให้สิทธิ์</a>
+                    </td>
+                {% endif %}
+                {% if staffshows.7 == 1 %}
+                    <td>
+                        <a href="{% url 'canpermission' staffshows.4 %}" class="btn btn-danger">ยกเลิกสิทธิ์</a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

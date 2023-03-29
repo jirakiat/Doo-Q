@@ -1,0 +1,351 @@
+{% extends 'masterweb.html' %}
+{% block show %}
+     <div id="page-loader" class="fade show">
+    <span class="spinner"></span>
+</div>
+<!-- end #page-loader -->
+
+<!-- begin #page-container -->
+<div id="page-container" class="fade page-sidebar-fixed page-header-fixed">
+    <!-- begin #header -->
+    <div id="header" class="header navbar-default">
+        <!-- begin navbar-header -->
+        <div class="navbar-header">
+            {% if request.session.permission == 1 %}
+                <a href="{% url 'dashboard' %}" class="navbar-brand">
+                <span class="navbar-logo"></span>
+                Doo-Q
+                เจ้าหน้าที่ {{ request.session.name }}
+            {% else %}
+                <a href="{% url 'calendar' %}" class="navbar-brand">
+                <span class="navbar-logo"></span>
+                Doo-Q
+                ผู้ป่วย : {{ request.session.name }}
+            {% endif %}</a>
+            <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+            <span style="width: 100%;  position: relative;font-size: 18px;left: 35%;padding-top: 0.5%;">หน้าข้อมูลส่วนตัว</span>
+        <!-- end navbar-header --><!-- begin header-nav -->
+        <ul class="navbar-nav navbar-right">
+            <li class="dropdown navbar-user">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    {% if request.session.permission == 1 %}
+                        {% for datahospitals in datahospital %}
+                            {% if dataST.Hid == datahospitals.Hid %}
+                                <span class="d-none d-md-inline" style="font-size: 18px">{{ datahospitals.Hname }} -
+                                    {% for dataDPMs in dataDPM %}
+                                        {% if  dataDPMs.Did == Dids %}
+                                            {{ dataDPMs.Dname }}
+                                        {% endif %}
+                                    {% endfor %}</span>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {% if hospitalname %}
+                            <span class="d-none d-md-inline"
+                                  style="font-size: 18px">{{ hospitalname }} - {{ DPM }} </span>
+                        {% endif %}
+                    {% endif %}
+                    {% if request.session.hn %}
+                        <span class="d-none d-md-inline"
+                              style="font-size: 18px">กำลังใช้บริการ - {{ request.session.hospital }} </span>
+                    {% endif %}
+                </a>
+            </li>
+        </ul>
+        <!-- end header navigation right -->
+    </div>
+    <!-- end #header -->
+
+    <!-- begin #sidebar -->
+    <div id="sidebar" class="sidebar">
+        <!-- begin sidebar scrollbar -->
+        <div data-scrollbar="true" data-height="100%">
+            <!-- begin sidebar user -->
+            <ul class="nav">
+                {% if request.session.permission == 1 %}
+                    <li>
+                        <a href="{% url 'dashboard' %}">
+                            <i class="material-icons">dashboard</i>
+                            <span>dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'callqueue2' %}">
+                            <i class="material-icons">calendar_today</i>
+                            <span>เรียกคิว</span>
+                        </a>
+                    </li>
+                    <li >
+                        <a href="{% url 'vtfbooking' %}">
+                            <i class="material-icons">calendar_today</i>
+                            <span>รับคิว</span>
+                        </a>
+                    </li>
+                    <li class="has-sub active">
+                        <a href="{% url 'staff' %}">
+                            <i class="material-icons">local_hospital</i>
+                            <span style="text-align: left">แผนก/กลุ่มงาน</span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li class="has-sub">
+                                <a href="{% url 'sthos' %}">
+                                    <b class="caret"></b>
+                                    <span style="text-align: left">แพทย์/เจ้าหน้าที่(ตามสังกัด)</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="sub-menu">
+                            <li class="has-sub">
+                                <a href="{% url 'doctor' %}">
+                                    <b class="caret"></b>
+                                    <span>แผนรับคนไข้</span>
+                                </a>
+                            </li>
+                        </ul>
+                     <ul class="sub-menu" >
+                            <li class="has-sub">
+                                <a href="{% url 'tagdpm' %}">
+                                    <b class="caret"></b>
+                                    <span style="text-align: left;">เพิ่มแท็กกิจกรรม</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="{% url 'mnbook' %}">
+                            <i class="material-icons">date_range</i>
+                            <span>กำหนดช่วงเวลา</span>
+                        </a>
+                    </li>
+                    <li  class="active" style="background-color: mediumseagreen">
+                        <a href="{% url 'staffinfo' %}">
+                            <i class="material-icons">supervised_user_circle</i>
+                            <span>ข้อมูลส่วนตัว</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{% url 'calendar' %}">
+                            <i class="material-icons">calendar_today</i>
+                            <span>จองคิว</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'person' %}">
+                            <i class="material-icons">calendar_today</i>
+                            <span>HN</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'personinfo' %}">
+                            <i class="material-icons">supervised_user_circle</i>
+                            <span>ข้อมูลส่วนตัว</span>
+                        </a>
+                    </li>
+                {% endif %}
+                <li>
+                    <a href="{% url 'dessession' %}" class="btn btn-default">
+                        <i class="material-icons">logout</i>
+                        <span style="color: black;">ออกจากระบบ</span>
+                    </a>
+                </li>
+            </ul>
+            <!-- end sidebar nav -->
+        </div>
+        <!-- end sidebar scrollbar -->
+    </div>
+    <div class="sidebar-bg"></div>
+    <div class="content" id="content" style="font-size: 18px;">
+        {% if dataST.Hid == 0 %}
+            <script type="text/javascript">
+                $(window).on('load', function () {
+                    $('#modal-dialog').modal('show');
+                });
+            </script>
+            <div class="modal fade" id="modal-dialog">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">เลือกโรงพยาบาลที่สังกัด</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        </div>
+                        <form class="form-horizontal form-bordered" action="{% url 'settingHn' %}" method="post">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <select class="form-control mb-3" name="Hid">
+                                    <option value="" selected>เลือกโรงพยาบาลสังกัด</option>
+                                    {% for datahospitals in datahospitales %}
+                                        <option value="{{ datahospitals.Hid }}">{{ datahospitals.Hname }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">ยืนยัน</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    <div class="col-lg-12">
+        <div class="panel panel-inverse" data-sortable-id="form-plugins-12">
+            <!-- begin panel-heading -->
+            <div class="panel-heading">
+                <h4 class="panel-title">ข้อมูลส่วนตัวเจ้าหน้าที่</h4>
+                <div class="panel-heading-btn">
+                </div>
+            </div>
+            <!-- end panel-heading -->
+            <!-- begin panel-body -->
+            <div class="panel-body panel-form">
+                <form class="form-horizontal form-bordered"
+                      action="{% url 'editstaff' %}"
+                      method="post">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <label class="col-lg-4 col-form-label">รหัสผู้ใช้</label>
+                        <div class="col-lg-8">
+                            <input class="form-control inputDatabaseName" value="{{ dataPerson.Pid }}" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-4 col-form-label">ชื่อผู้ใช้</label>
+                        <div class="col-lg-8">
+                            <input class="form-control testsss" id="name{{ dataPerson.Pid }}" type="text"
+                                   name="usename"
+                                   value="{{ dataPerson.Pname }}">
+                            <input type="hidden" name="userid" value="{{ dataPerson.Pid }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-4 col-form-label">อีเมล</label>
+                        <div class="col-lg-8">
+                            <div class="input-group bootstrap-timepicker">
+                                <input class="form-control testsss" id="mail{{ dataPerson.Pid }}" type="text"
+                                       name="mail" value="{{ dataPerson.Pemail }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-4 col-form-label">รหัสผ่าน</label>
+                        <div class="col-lg-8">
+                            <input class="form-control testsss" id="password{{ dataPerson.Pid }}" type="password"
+                                   name="password"
+                                   value="{{ dataPerson.Ppassword }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-4 col-form-label">โรงพยาบาล</label>
+                        <div class="col-lg-8">
+                            <select onchange="chk_select1(this)"
+                                    class="form-control mb-3" name="Hid">
+                                {% for datahospitals in datahospital %}
+                                    {% if dataST.Hid == datahospitals.Hid %}
+                                        <option selected value="{{ datahospitals.Hid }}">{{ datahospitals.Hname }}
+                                        </option>
+                                    {% else %}
+                                        <option value="{{ datahospitals.Hid }}">{{ datahospitals.Hname }}</option>
+                                    {% endif %}
+                                {% endfor %}
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-4 col-form-label">แผนก/กลุ่มงาน</label>
+                        <div class="col-lg-8">
+                            {% if  x == 1 %}
+                                <select class="form-control mb-3" onchange="chk_select2(this)" id="mySelect2"
+                                        name="Did">
+                                    {% for dataDPMs in dataDPM %}
+                                        {% for dataOFFs in dataOFF %}
+                                            {% if dataOFFs.Did == dataDPMs.Did %}
+                                                <option selected value="{{ dataDPMs.Did }}">{{ dataDPMs.Dname }}
+                                                </option>
+                                            {% else %}
+                                                <option value="{{ dataDPMs.Did }}">{{ dataDPMs.Dname }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                </select>
+                            {% endif %}
+                            {% if x == 2 %}
+                                <select class="form-control mb-3" name="Did">
+                                    {% for dataDPMs in dataDPM %}
+                                        <option value="{{ dataDPMs.Did }}">{{ dataDPMs.Dname }}</option>
+                                    {% endfor %}
+                                </select>
+                                <span style="color: red;font-size: 14px">โปรดเลือกกลุ่มงานของท่าน</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-4 col-form-label"></label>
+                        <div class="col-lg-8">
+                            <button type="submit" class="btn btn-primary pull-right " id="btnsub" disabled>บันทึก
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- end panel-body -->
+        </div>
+    </div>
+    </div>
+    <script>
+        {% if x == 2 %}
+            document.getElementById("btnsub").disabled = false;
+        {% endif %}
+        var temp_val
+        var temp_val2
+
+        function chk_select1(obj) {
+            temp_val2 = obj.value;
+            if (temp_val2 == "{{ dataST.Hid  }}") {
+            } else {
+                document.getElementById("btnsub").disabled = false;
+            }
+        }
+
+        function chk_select2(obj) {
+            {% for dataOFFs in dataOFF %}
+                temp_val = obj.value;
+                if (temp_val == "{{ dataOFFs.Did }}") {
+                } else {
+                    document.getElementById("btnsub").disabled = false;
+                }
+            {% endfor %}
+        }
+
+        $(document).ready(function () {
+            $('input.testsss').keydown(function (e) {
+                if (e.keyCode == 32) {
+                    return false;
+                }
+            });
+            $('.testsss').keyup(function () {
+                var isvals = document.getElementById("mail{{ dataPerson.Pid }}").value;
+                var isvald = document.getElementById("password{{ dataPerson.Pid }}").value;
+                var isvale = document.getElementById("name{{ dataPerson.Pid }}").value;
+                if (isvald == "{{ dataPerson.Ppassword }}") {
+                } else {
+                    document.getElementById("btnsub").disabled = false;
+                }
+                if (isvals == "{{ dataPerson.Pemail }}") {
+                } else {
+                    document.getElementById("btnsub").disabled = false;
+                }
+                if (isvale == "{{ dataPerson.Pname }}") {
+
+                } else {
+                    document.getElementById("btnsub").disabled = false;
+                }
+            });
+        });
+    </script>
+{% endblock %}

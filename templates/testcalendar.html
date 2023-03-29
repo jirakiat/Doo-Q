@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css" data-print="true"
+          rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar-scheduler/1.9.4/scheduler.min.js"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar-scheduler/1.9.4/scheduler.min.css"/>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var today = moment();
+            $('#calendar').fullCalendar({
+                locals: 'th',
+                droppable: true,
+                defaultView: 'Week',
+                header: false,
+                defaultDate: today,
+                navLinks: false, // can click day/week names to navigate views
+                editable: true,
+                eventLimit: true, // allow "more" link when too many events
+                schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+                /*events: [
+
+                    {
+                        title  : 'event1',
+                        start  : today,
+                        imageurl:'assets/images/recipe/salad.jpg'
+                    }
+
+                ],*/
+                /*views: {
+                    agendaWeek: {
+                        agendaEventMinHeight: 150,
+                        allDaySlot: false,
+                        slotLabelInterval: { hours: 6},
+                        slotDuration: { hours: 1},
+                        duration: { days: 7}
+                    }
+                },*/
+                eventRender: function (event, element) {
+                    element.find(".fc-event-title").remove();
+                    element.find(".fc-event-time").remove();
+                    var new_description = '#';
+                    element.append(new_description);
+
+                },
+                now: today,
+                /*header: {
+                    left: 'promptResource',
+                    center: '',
+                    right: ''
+
+                },*/
+                footer: {
+                    left: 'promptResource',
+                    center: '',
+                    right: ''
+                },
+                views: {
+                    Week: {
+                        type: 'timeline',
+                        duration: {Days: '1'},
+                        slotLabelInterval: {hours: 24},
+                        slotDuration: {hours: 24},
+                    }
+                },
+                resourceLabelText: 'ช่วงเวลา',
+                resourceRender: function (resource, cellEls) {
+                    cellEls.on('click', function () {
+                        if (confirm('Are you sure you want to delete ' + resource.title + '?')) {
+                            $('#calendar').fullCalendar('removeResource', resource);
+                        }
+                    });
+                },
+                resources: [
+                    {% for testtimes in testtime %}
+                        {
+                            id: '{{testtimes.id}}',
+                            title: '{{testtimes.timestart | date:'H:i'}} - {{testtimes.timeend | date:'H:i'}}',
+                            eventColor: 'red'
+                        },
+                    {% endfor %}
+                ],
+
+                events: [
+                    {id: '1', resourceId: '4', start: today, end: today, title: 'event 1'},
+
+                ]
+
+            });
+        });
+
+    </script>
+    <style>
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+            font-size: 14px;
+        }
+
+        #calendar {
+            max-width: 1100px;
+            margin: 50px auto;
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="calendar"></div>
+
+</body>
+</html>
